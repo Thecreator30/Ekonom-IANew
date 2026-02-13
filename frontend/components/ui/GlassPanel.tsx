@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, ViewProps, Platform, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { cn } from 'nativewind';
-
 interface GlassPanelProps extends ViewProps {
     intensity?: number;
     className?: string;

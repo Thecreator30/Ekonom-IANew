@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, Platform } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Home, Ticket, Users, Megaphone, Sparkles, QrCode } from 'lucide-react-native';
+import { Home, Ticket, Users, Megaphone, Sparkles, QrCode, ScanLine } from 'lucide-react-native';
 import { GlassPanel } from './GlassPanel';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
@@ -37,6 +37,7 @@ export function GlassDock({ state, descriptors, navigation }: BottomTabBarProps)
                     if (route.name === 'coupons') Icon = Ticket;
                     if (route.name === 'subscribers') Icon = Users;
                     if (route.name === 'promotions') Icon = Megaphone;
+                    if (route.name === 'scan') Icon = ScanLine;
                     if (route.name === 'qr') Icon = QrCode;
                     if (route.name === 'assistant') Icon = Sparkles;
 

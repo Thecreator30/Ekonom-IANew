@@ -32,19 +32,22 @@ export default function TabLayout() {
                     options={{ title: "Eko" }}
                 />
                 <Tabs.Screen
-                    name="subscribers"
-                    options={{ title: "Users" }}
+                    name="scan"
+                    options={{ title: "Scan" }}
                 />
                 <Tabs.Screen
                     name="promotions"
                     options={{ title: "Promos" }}
                 />
-
-                {/* 
-                  Hidden tabs or other configurations if needed.
-                  The design had: Dashboard, Coupons, Eko, Subscribers, Promotions.
-                  We need to ensure these files exist or link to placeholders.
-                */}
+                {/* Hidden screens that exist as files but shouldn't show in tabs */}
+                <Tabs.Screen
+                    name="subscribers"
+                    options={{ href: null }}
+                />
+                <Tabs.Screen
+                    name="profile"
+                    options={{ href: null }}
+                />
             </Tabs>
         </View>
     );

@@ -53,7 +53,7 @@ export default function DashboardScreen() {
             >
                 {/* Top Bar */}
                 <View className="flex-row justify-between items-center mb-8">
-                    <TouchableOpacity onPress={() => router.push("/settings")} className="flex-row items-center gap-3">
+                    <TouchableOpacity onPress={() => router.push("/(tabs)/profile")} className="flex-row items-center gap-3">
                         <View className="w-10 h-10 rounded-full border border-white/10 overflow-hidden">
                             <Image
                                 source={{ uri: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" }}

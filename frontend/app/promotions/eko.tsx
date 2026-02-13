@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { X, Sparkles, Copy, RefreshCw } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { api } from "../../services/api";
 
 export default function EkoScreen() {
     const router = useRouter();

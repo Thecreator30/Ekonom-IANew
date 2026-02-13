@@ -3,7 +3,7 @@ import { prisma } from '@/infrastructure/db';
 
 export class BillingService {
     private static stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-        apiVersion: '2025-01-27.acacia', // Use latest API version available
+        apiVersion: '2023-10-16',
     });
 
     static async createCheckoutSession(merchantId: string, plan: 'PRO' | 'ENTERPRISE') {
