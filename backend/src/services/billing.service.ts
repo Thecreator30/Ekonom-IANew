@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { prisma } from '@/infrastructure/prisma';
+import { prisma } from '@/infrastructure/db';
 
 export class BillingService {
     private static stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {

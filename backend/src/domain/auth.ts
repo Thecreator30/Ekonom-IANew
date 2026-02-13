@@ -9,6 +9,7 @@ export interface JWTPayload {
     sub: string; // user_id / merchant_id
     email: string;
     role: string;
+    merchant_id: string;
     iat: number;
     exp: number;
 }

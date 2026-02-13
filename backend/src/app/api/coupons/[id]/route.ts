@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/infrastructure/prisma";
+import { prisma } from "@/infrastructure/db";
 import { AuthService } from "@/services/auth.service";
 
 async function authenticate(req: NextRequest) {

@@ -1,10 +1,19 @@
 import { prisma } from '../infrastructure/db';
 import { hashPassword, verifyPassword } from '../utils/hash';
-import { signAccessToken } from '../utils/token';
+import { signAccessToken, verifyToken as verifyJwt } from '../utils/token';
 import { User } from '../domain/auth';
 import { randomBytes } from 'crypto';
 
 export class AuthService {
+    static async verifyToken(token: string) {
+        const payload = verifyJwt(token);
+        const merchant = await prisma.merchant.findUnique({
+            where: { id: payload.sub },
+        });
+        if (!merchant) throw new Error('Merchant not found');
+        return merchant;
+    }
+
     static async register(data: { email: string; password: string; company_name: string }) {
         const existing = await prisma.merchant.findUnique({ where: { email: data.email } });
         if (existing) throw new Error('Email already registered');

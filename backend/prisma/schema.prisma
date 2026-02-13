@@ -1,6 +1,7 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -176,7 +177,7 @@ model Coupon {
 enum PushJobStatus {
   PENDING
   PROCESSING
-  DONE
+  COMPLETED
   FAILED
 }
 
@@ -187,12 +188,18 @@ model PushJob {
   promotion_id    String?
   promotion       Promotion?    @relation(fields: [promotion_id], references: [id])
   status          PushJobStatus @default(PENDING)
-  payload         String        // JSON: { title, body, data }
+  title           String
+  body            String
+  target_segment  String        @default("ALL")
+  scheduled_at    DateTime?
+  sent_at         DateTime?
+  success_count   Int           @default(0)
+  failure_count   Int           @default(0)
   attempt_count   Int           @default(0)
   created_at      DateTime      @default(now())
   processed_at    DateTime?
 
-  @@index([status, created_at]) // Worker queue index
+  @@index([status, created_at])
 }
 
 model PushRateLimit {

@@ -1,11 +1,17 @@
 import "../global.css";
+import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { MobileContainer } from "../components/MobileContainer";
+import { registerForPushNotifications } from "../services/notifications";
 
 export default function Layout() {
+  useEffect(() => {
+    registerForPushNotifications().catch(console.error);
+  }, []);
+
   return (
     <MobileContainer>
       <SafeAreaProvider>

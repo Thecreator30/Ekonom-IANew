@@ -5,7 +5,6 @@ export class PushNotificationService {
     private static readonly DAILY_LIMIT = 3;
 
     static async scheduleCampaign(merchantId: string, title: string, body: string, segment: string = 'ALL') {
-        // 1. Check Rate Limits
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -20,7 +19,6 @@ export class PushNotificationService {
             throw new Error(`Daily push limit reached (${this.DAILY_LIMIT}/day). Upgrade your plan for more.`);
         }
 
-        // 2. Create Job
         const job = await prisma.pushJob.create({
             data: {
                 merchant_id: merchantId,
@@ -28,11 +26,10 @@ export class PushNotificationService {
                 body,
                 target_segment: segment,
                 status: 'PENDING',
-                scheduled_at: new Date(), // Immediate for now
+                scheduled_at: new Date(),
             },
         });
 
-        // 3. Audit
         await AuditService.log({
             merchant_id: merchantId,
             action: 'SCHEDULE_PUSH',
@@ -40,10 +37,12 @@ export class PushNotificationService {
             metadata: { job_id: job.id, segment },
         });
 
+        // Process immediately (in production, use a queue worker)
+        this.processPendingJobs().catch(console.error);
+
         return job;
     }
 
-    // Simulates a worker processing the queue
     static async processPendingJobs() {
         const jobs = await prisma.pushJob.findMany({
             where: { status: 'PENDING' },
@@ -54,31 +53,82 @@ export class PushNotificationService {
 
         for (const job of jobs) {
             try {
-                // Update to PROCESSING
-                await prisma.pushJob.update({ where: { id: job.id }, data: { status: 'PROCESSING' } });
+                await prisma.pushJob.update({
+                    where: { id: job.id },
+                    data: { status: 'PROCESSING' },
+                });
 
-                // Simulate Sending (e.g. call Expo Push API)
-                await new Promise(resolve => setTimeout(resolve, 500));
+                const subscribers = await prisma.subscriber.findMany({
+                    where: {
+                        merchant_id: job.merchant_id,
+                        push_enabled: true,
+                        push_token: { not: null },
+                    },
+                    select: { push_token: true },
+                });
 
-                // Update to COMPLETED
+                const tokens = subscribers
+                    .map(s => s.push_token)
+                    .filter((t): t is string => t !== null);
+
+                let successCount = 0;
+                let failureCount = 0;
+
+                if (tokens.length > 0) {
+                    const result = await this.sendExpoPush(tokens, job.title, job.body);
+                    if (result.data) {
+                        for (const ticket of result.data) {
+                            if (ticket.status === 'ok') successCount++;
+                            else failureCount++;
+                        }
+                    }
+                }
+
                 const completed = await prisma.pushJob.update({
                     where: { id: job.id },
                     data: {
                         status: 'COMPLETED',
                         sent_at: new Date(),
-                        success_count: 1248, // Mock count
-                        failure_count: 0
-                    }
+                        success_count: successCount,
+                        failure_count: failureCount,
+                        processed_at: new Date(),
+                    },
                 });
                 results.push(completed);
             } catch (error) {
+                console.error(`Push job ${job.id} failed:`, error);
                 await prisma.pushJob.update({
                     where: { id: job.id },
-                    data: { status: 'FAILED' }
+                    data: { status: 'FAILED', attempt_count: { increment: 1 } },
                 });
             }
         }
 
         return results;
+    }
+
+    private static async sendExpoPush(tokens: string[], title: string, body: string) {
+        const messages = tokens.map(token => ({
+            to: token,
+            sound: 'default' as const,
+            title,
+            body,
+        }));
+
+        const response = await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+            },
+            body: JSON.stringify(messages),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Expo Push API error: ${response.status}`);
+        }
+
+        return response.json();
     }
 }
