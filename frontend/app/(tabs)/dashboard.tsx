@@ -1,13 +1,14 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, Alert, RefreshControl } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl, Image } from "react-native";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { TrendingUp, Users, Tag, Plus, ArrowRight, Bell, Sparkles, LogOut, Menu, User, Calendar, Gift } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { Users, Ticket, ArrowUpRight, Sparkles, Plus, Activity, Bell } from "lucide-react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { AnimatedBackground } from "../../components/ui/AnimatedBackground";
+import { GlassPanel } from "../../components/ui/GlassPanel";
 import { api } from "../../services/api";
-import { clearTokens } from "../../services/storage";
 import { EkoBot } from "../../components/EkoBot";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function DashboardScreen() {
     const router = useRouter();
@@ -15,11 +16,7 @@ export default function DashboardScreen() {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-        loadData();
-    }, []);
-
-    const loadData = async () => {
+    const fetchData = async () => {
         try {
             const data = await api.dashboard.stats();
             setStats(data);
@@ -31,190 +28,161 @@ export default function DashboardScreen() {
         }
     };
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     const onRefresh = () => {
         setRefreshing(true);
-        loadData();
+        fetchData();
     };
 
-    const handleLogout = async () => {
-        await clearTokens();
-        router.replace("/");
-    };
+    const currentHour = new Date().getHours();
+    let greeting = "Bonjour";
+    if (currentHour >= 18) greeting = "Bonsoir";
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-900">
-            <StatusBar style="dark" />
-
-            {/* Header */}
-            <View className="px-5 pt-14 pb-4 bg-white dark:bg-slate-800 flex-row justify-between items-center shadow-sm z-10">
-                <View className="flex-row items-center gap-3">
-                    <TouchableOpacity className="p-2 -ml-2">
-                        <Menu size={24} color="#64748b" />
-                    </TouchableOpacity>
-                    <Text className="text-xl font-bold bg-clip-text text-transparent" style={{ color: '#3b82f6' }}>
-                        Ekonom-IA
-                    </Text>
-                </View>
-                <TouchableOpacity onPress={handleLogout}>
-                    <Image
-                        source={{ uri: "https://api.dicebear.com/7.x/avataaars/png?seed=Felix" }}
-                        className="w-10 h-10 rounded-full border-2 border-blue-100"
-                    />
-                    <View className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
-                </TouchableOpacity>
-            </View>
+        <View className="flex-1 bg-[#050505]">
+            <StatusBar style="light" />
+            <AnimatedBackground />
 
             <ScrollView
-                className="flex-1"
+                className="flex-1 px-5 pt-12"
                 contentContainerStyle={{ paddingBottom: 100 }}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" />}
             >
-                <View className="px-5 pt-6 mb-6">
-                    <Text className="text-2xl font-bold text-slate-900 dark:text-white">Bonjour, Thomas 👋</Text>
-                    <Text className="text-sm text-slate-500 mt-1">Voici ce qui se passe dans votre boutique.</Text>
-                </View>
-
-                {/* KPI Carousel */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pl-5 pb-6 -mr-5 gap-4" contentContainerStyle={{ paddingRight: 40 }}>
-                    {/* Subscribers Card */}
-                    <View className="min-w-[260px] bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
-                        <View className="absolute top-0 right-0 p-4 opacity-10">
-                            <Users size={80} color="#3b82f6" />
+                {/* Top Bar */}
+                <View className="flex-row justify-between items-center mb-8">
+                    <TouchableOpacity onPress={() => router.push("/settings")} className="flex-row items-center gap-3">
+                        <View className="w-10 h-10 rounded-full border border-white/10 overflow-hidden">
+                            <Image
+                                source={{ uri: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" }}
+                                style={{ width: '100%', height: '100%' }}
+                            />
                         </View>
-                        <View className="flex-row justify-between mb-4">
-                            <View className="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-xl">
-                                <Users size={24} color="#3b82f6" />
-                            </View>
-                            <View className="bg-green-50 px-2 py-1 rounded-full flex-row items-center">
-                                <TrendingUp size={14} color="#16a34a" />
-                                <Text className="text-xs font-bold text-green-600 ml-1">+12%</Text>
-                            </View>
+                        <View>
+                            <Text className="text-xl font-bold text-white tracking-tight">{greeting}, Alex</Text>
+                            <Text className="text-xs text-gray-400">Boutique St-Honoré • <Text className="text-green-500 font-bold">Ouvert</Text></Text>
                         </View>
-                        <Text className="text-slate-500 text-sm font-medium">Nombre Abonnés</Text>
-                        <Text className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{stats?.totalSubscribers || 0}</Text>
-                    </View>
-
-                    {/* Active Promotions Card */}
-                    <View className="min-w-[260px] bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
-                        <View className="absolute top-0 right-0 p-4 opacity-10">
-                            <Tag size={80} color="#8b5cf6" />
-                        </View>
-                        <View className="flex-row justify-between mb-4">
-                            <View className="bg-purple-50 dark:bg-purple-900/30 p-2 rounded-xl">
-                                <Tag size={24} color="#8b5cf6" />
-                            </View>
-                            <Text className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">En cours</Text>
-                        </View>
-                        <Text className="text-slate-500 text-sm font-medium">Promotions Actives</Text>
-                        <Text className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{stats?.activePromotions || 0}</Text>
-                    </View>
-
-                    {/* AI Usage Card */}
-                    <View className="min-w-[260px] bg-indigo-600  p-5 rounded-2xl shadow-lg shadow-indigo-500/30 relative overflow-hidden">
-                        <View className="absolute -bottom-4 -right-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl" />
-                        <View className="flex-row justify-between mb-4">
-                            <View className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
-                                <Sparkles size={24} color="white" />
-                            </View>
-                            <Text className="text-xs font-bold text-white bg-white/20 px-2 py-1 rounded-full">Beta</Text>
-                        </View>
-                        <Text className="text-indigo-100 text-sm font-medium">Contenu IA Généré</Text>
-                        <Text className="text-3xl font-bold text-white mt-1">{stats?.aiUsage || 0}</Text>
-                        <Text className="text-xs text-indigo-200 mt-2 flex-row items-center">
-                            <Calendar size={12} color="#c7d2fe" /> Cette semaine
-                        </Text>
-                    </View>
-                </ScrollView>
-
-                {/* Quick Actions */}
-                <View className="px-5 mb-8 flex-row gap-3">
-                    <TouchableOpacity
-                        className="flex-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-dashed border-slate-300 items-center active:bg-blue-50"
-                        onPress={() => router.push("/promotions/create")}
-                    >
-                        <View className="w-12 h-12 rounded-full bg-blue-100 items-center justify-center mb-2">
-                            <Plus size={24} color="#3b82f6" />
-                        </View>
-                        <Text className="text-xs font-bold text-slate-700">Nouvelle Promo</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        className="flex-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-dashed border-slate-300 items-center active:bg-purple-50"
-                        onPress={() => router.push("/promotions/oxy")}
-                    >
-                        <View className="w-12 h-12 rounded-full bg-purple-100 items-center justify-center mb-2">
-                            <Sparkles size={24} color="#8b5cf6" />
-                        </View>
-                        <Text className="text-xs font-bold text-slate-700">Générer avec IA</Text>
+                    <TouchableOpacity className="w-10 h-10 rounded-full bg-white/10 border border-white/10 items-center justify-center relative">
+                        <Bell size={20} color="#d1d5db" />
+                        <View className="absolute top-2.5 right-3 w-1.5 h-1.5 bg-red-500 rounded-full" />
                     </TouchableOpacity>
                 </View>
 
-                {/* Recent Activity */}
-                <View className="px-5 mb-8">
-                    <View className="flex-row justify-between items-end mb-4">
-                        <Text className="text-lg font-bold text-slate-900">Activités Récentes</Text>
-                        <TouchableOpacity onPress={loadData}>
-                            <Text className="text-blue-600 font-semibold text-sm">Rafraîchir</Text>
-                        </TouchableOpacity>
-                    </View>
+                {/* Bento Grid Layout */}
+                <View className="flex-row flex-wrap gap-4 mb-6">
 
-                    <View className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                        {loading ? (
-                            <View className="p-8 items-center"><Text className="text-slate-500">Chargement...</Text></View>
-                        ) : !stats?.recentActivity?.length ? (
-                            <View className="p-8 items-center"><Text className="text-slate-500">Aucune activité récente</Text></View>
-                        ) : (
-                            stats.recentActivity.map((log: any, i: number) => (
-                                <View key={i} className={`p-4 flex-row items-start border-b border-slate-50 ${i === stats.recentActivity.length - 1 ? 'border-b-0' : ''}`}>
-                                    <View className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 shrink-0 ${log.action.includes('USER') ? 'bg-green-100' :
-                                        log.action.includes('COUPON') ? 'bg-orange-100' : 'bg-purple-100'
-                                        }`}>
-                                        {log.action.includes('USER') ? <User size={20} color="#16a34a" /> :
-                                            log.action.includes('COUPON') ? <Gift size={20} color="#ea580c" /> :
-                                                <Bell size={20} color="#8b5cf6" />}
-                                    </View>
-                                    <View className="flex-1">
-                                        <Text className="text-sm font-bold text-slate-900">{log.action}</Text>
-                                        <Text className="text-xs text-slate-500 mt-1" numberOfLines={1}>
-                                            {JSON.stringify(log.metadata)}
-                                        </Text>
-                                        <Text className="text-[10px] text-slate-400 mt-2">
-                                            {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </Text>
+                    {/* Main Stat Card - Full Width */}
+                    <Animated.View entering={FadeInDown.delay(100)} style={{ width: '100%' }}>
+                        <GlassPanel className="rounded-[2rem] p-6 relative overflow-hidden h-48 justify-between">
+                            <View className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px]" />
+
+                            <View className="flex-row justify-between items-start z-10">
+                                <View>
+                                    <Text className="text-sm text-gray-400 font-medium mb-1">Chiffre d'affaires (Est.)</Text>
+                                    <Text className="text-4xl font-bold text-white tracking-tight">12,450€</Text>
+                                    <View className="flex-row items-center gap-2 mt-2">
+                                        <View className="px-2 py-0.5 rounded-full bg-green-500/20 border border-green-500/30 flex-row items-center">
+                                            <ArrowUpRight size={12} color="#4ade80" />
+                                            <Text className="text-green-400 text-xs font-bold ml-1">+14%</Text>
+                                        </View>
+                                        <Text className="text-xs text-gray-500">vs mois dernier</Text>
                                     </View>
                                 </View>
-                            ))
-                        )}
-                    </View>
-                </View>
+                                <View className="w-12 h-12 rounded-2xl bg-purple-500/20 items-center justify-center border border-purple-500/20">
+                                    <Activity size={24} color="#a855f7" />
+                                </View>
+                            </View>
 
-                {/* AI Insight Card */}
-                <View className="px-5 mb-24">
-                    <Text className="text-lg font-bold text-slate-900 mb-4">Suggestion IA du jour</Text>
-                    <View className="bg-slate-900 rounded-2xl p-5 relative overflow-hidden shadow-lg">
-                        <View className="absolute top-0 right-0 w-32 h-32 bg-purple-500 opacity-20 rounded-full blur-3xl -mr-10 -mt-10" />
+                            {/* Micro Chart Visualization (CSS Bars) */}
+                            <View className="flex-row items-end gap-1 h-12 opacity-50 z-10">
+                                {[40, 65, 50, 80, 55, 90, 70, 85, 60, 95, 75, 100].map((h, i) => (
+                                    <View key={i} style={{ height: `${h}%` }} className="flex-1 bg-white/50 rounded-t-sm" />
+                                ))}
+                            </View>
+                        </GlassPanel>
+                    </Animated.View>
 
-                        <View className="flex-row items-center gap-2 mb-3">
-                            <Sparkles size={16} color="#c084fc" />
-                            <Text className="text-xs font-bold uppercase tracking-wider text-slate-300">Ekonom-IA Insight</Text>
-                        </View>
-
-                        <Text className="text-slate-200 text-sm leading-6 mb-4">
-                            Les ventes chutent généralement le mardi. Lancez une "Offre Flash Mardi" pour vos {stats?.totalSubscribers || 0} abonnés pour booster le trafic.
-                        </Text>
-
-                        <TouchableOpacity
-                            className="bg-white py-3 rounded-xl items-center"
-                            onPress={() => router.push("/promotions/create")}
-                        >
-                            <Text className="text-slate-900 font-bold text-sm">Créer cette campagne</Text>
+                    {/* Action Card 1: New Promo - Half Width */}
+                    <Animated.View entering={FadeInDown.delay(200)} style={{ width: '47%' }}>
+                        <TouchableOpacity onPress={() => router.push("/promotions/create")}>
+                            <GlassPanel className="rounded-[2rem] p-5 h-40 justify-between group active:bg-blue-500/10">
+                                <View className="w-10 h-10 rounded-full bg-blue-500/20 items-center justify-center border border-blue-500/20 text-blue-400">
+                                    <Plus size={20} color="#60a5fa" />
+                                </View>
+                                <View>
+                                    <Text className="font-bold text-lg text-white leading-tight mb-1">Créer{'\n'}Offre</Text>
+                                    <Text className="text-xs text-gray-500">QR Code & Promo</Text>
+                                </View>
+                            </GlassPanel>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
+
+                    {/* Action Card 2: Eko Insight - Half Width */}
+                    <Animated.View entering={FadeInDown.delay(300)} style={{ width: '47%' }}>
+                        <TouchableOpacity onPress={() => router.push("/assistant")}>
+                            <GlassPanel className="rounded-[2rem] p-5 h-40 justify-between active:bg-purple-500/10">
+                                <View className="w-10 h-10 rounded-full bg-purple-500/20 items-center justify-center border border-purple-500/20">
+                                    <Sparkles size={20} color="#c084fc" />
+                                </View>
+                                <View>
+                                    <Text className="font-bold text-lg text-white leading-tight mb-1">Demander{'\n'}à Eko</Text>
+                                    <Text className="text-xs text-gray-500">Assistant IA</Text>
+                                </View>
+                            </GlassPanel>
+                        </TouchableOpacity>
+                    </Animated.View>
+
+                    {/* Stat Card: Subscribers */}
+                    <Animated.View entering={FadeInDown.delay(400)} style={{ width: '47%' }}>
+                        <GlassPanel className="rounded-[2rem] p-5 h-32 justify-between">
+                            <View className="flex-row justify-between items-start">
+                                <Users size={20} color="#9ca3af" />
+                                <Text className="text-xs text-green-500 font-bold">+{stats?.newSubscribers || 12}</Text>
+                            </View>
+                            <View>
+                                <Text className="text-2xl font-bold text-white">{stats?.totalSubscribers || '...'}</Text>
+                                <Text className="text-xs text-gray-500">Abonnés actifs</Text>
+                            </View>
+                        </GlassPanel>
+                    </Animated.View>
+
+                    {/* Stat Card: Coupons */}
+                    <Animated.View entering={FadeInDown.delay(500)} style={{ width: '47%' }}>
+                        <GlassPanel className="rounded-[2rem] p-5 h-32 justify-between">
+                            <View className="flex-row justify-between items-start">
+                                <Ticket size={20} color="#9ca3af" />
+                                <Text className="text-xs text-orange-500 font-bold">Exp. 2j</Text>
+                            </View>
+                            <View>
+                                <Text className="text-2xl font-bold text-white">{stats?.activeCoupons || '...'}</Text>
+                                <Text className="text-xs text-gray-500">Coupons scannés</Text>
+                            </View>
+                        </GlassPanel>
+                    </Animated.View>
+
                 </View>
+
+                {/* Eko Insight Bar */}
+                <Animated.View entering={FadeInDown.delay(600)}>
+                    <GlassPanel className="rounded-2xl p-2 pr-4 flex-row items-center gap-3 border-l-4 border-l-purple-500">
+                        <View className="w-10 h-10 rounded-xl bg-purple-500/20 items-center justify-center shrink-0">
+                            {/* Small version of EkoBot or just icon */}
+                            <EkoBot scale={0.5} />
+                        </View>
+                        <View className="flex-1">
+                            <Text className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Insight Eko</Text>
+                            <Text className="text-xs text-gray-300" numberOfLines={1}>Vos ventes de café baissent le mardi. Lancez une offre flash ?</Text>
+                        </View>
+                        <TouchableOpacity className="p-2">
+                            <ArrowUpRight size={16} color="#9ca3af" />
+                        </TouchableOpacity>
+                    </GlassPanel>
+                </Animated.View>
 
             </ScrollView>
-
-            <StatusBar style="dark" />
         </View>
     );
 }
