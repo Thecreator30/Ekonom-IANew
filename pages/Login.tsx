@@ -27,7 +27,7 @@ const Login: React.FC = () => {
     <div className="h-full bg-transparent flex flex-col relative overflow-hidden">
       
       {/* Header */}
-      <div className="px-6 pt-10 pb-4 relative z-10 flex justify-between items-center animate-fade-in">
+      <div className="px-5 pt-10 pb-4 relative z-10 flex justify-between items-center animate-fade-in">
         <button onClick={() => navigate('/')} className="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-gray-600 dark:text-gray-300 transition hover:bg-black/5 dark:hover:bg-white/10 group">
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
         </button>
@@ -38,7 +38,7 @@ const Login: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-6 flex flex-col justify-center pb-10 relative z-10">
+      <div className="flex-1 px-5 flex flex-col justify-center pb-10 relative z-10">
          <div className="mb-10 flex flex-col items-center text-center animate-slide-up">
             <div className="relative mb-6 animate-float">
                  <div className="absolute inset-0 bg-blue-500/30 blur-2xl rounded-full"></div>

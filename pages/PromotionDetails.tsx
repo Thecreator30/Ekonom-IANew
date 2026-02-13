@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from '../context/ThemeContext';
 import { ArrowLeft, Share2, Download, Copy, Calendar, BarChart, ExternalLink, ShieldCheck, Loader2 } from 'lucide-react';
@@ -52,15 +51,15 @@ const PromotionDetails: React.FC = () => {
     return (
         <div className="h-full bg-transparent pb-6 animate-fade-in relative flex flex-col">
              {/* Header */}
-            <header className="px-6 pt-10 pb-6 flex items-center justify-between relative z-10">
-                <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition">
+            <header className="px-5 pt-10 pb-6 flex items-center justify-between relative z-10">
+                <button onClick={() => navigate('/promotions')} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition">
                     <ArrowLeft size="24" className="text-gray-900 dark:text-white" />
                 </button>
                 <h1 className="text-base font-bold text-gray-900 dark:text-white">Détails Promotion</h1>
                 <div className="w-10"></div> {/* Spacer */}
             </header>
 
-            <main className="px-6 flex-1 overflow-y-auto no-scrollbar pb-24 space-y-6">
+            <main className="px-5 flex-1 overflow-y-auto no-scrollbar pb-24 space-y-6">
                 
                 {/* Promo Info Card - Glassmorphism UI */}
                 <div className="glass-panel p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-white/5 relative overflow-hidden">

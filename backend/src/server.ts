@@ -1,5 +1,4 @@
-
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -13,13 +12,13 @@ import { env } from './config/env';
 const app = express();
 
 // Security Middleware
-app.use(helmet());
+app.use(helmet() as any);
 app.use(cors({
     origin: env.FRONTEND_URL,
     credentials: true, // Allow cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-}));
-app.use(express.json({ limit: '100kb' })); // Prevent large payloads
+}) as any);
+app.use(express.json({ limit: '100kb' }) as any); // Prevent large payloads
 app.use(cookieParser() as any);
 
 // Health Check

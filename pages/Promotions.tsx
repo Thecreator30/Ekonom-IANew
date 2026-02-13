@@ -9,7 +9,8 @@ const Promotions: React.FC = () => {
       id: 'sales-v1',
       title: "Soldes d'Été V1",
       description: "Campagne principale pour le trafic magasin et web.",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80",
+      // Image valide et thématique
+      image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=800&q=80", 
       endDate: "Dans 24h",
       stats: { clicks: 1240, conv: "12%" }
   };
@@ -29,20 +30,13 @@ const Promotions: React.FC = () => {
           image: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80",
           stats: { revenue: "1.2k€", generated: 340 }
       },
-      {
-          id: 'black-friday',
-          title: "Black Friday",
-          status: "Archivée",
-          image: "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=400&q=80",
-          stats: { revenue: "2.8k€", generated: 850 }
-      }
   ];
 
   return (
-    <div className="px-5 pt-8 pb-24 animate-fade-in text-gray-900 dark:text-white min-h-full bg-transparent">
+    <div className="w-full px-5 pt-8 pb-32 animate-fade-in text-gray-900 dark:text-white bg-transparent">
         
         {/* Header */}
-        <header className="flex justify-between items-center mb-8 relative z-10">
+        <header className="flex justify-between items-center mb-8 relative z-10 w-full">
             <div>
                 <h1 className="text-2xl font-bold tracking-tight">Campagnes</h1>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Gérez vos temps forts</p>
@@ -58,7 +52,7 @@ const Promotions: React.FC = () => {
         </header>
 
         {/* Active Campaign Spotlight (Hero Card) */}
-        <div className="mb-10 relative group cursor-pointer" onClick={() => navigate(`/promotions/${activePromo.id}`)}>
+        <div className="mb-10 relative group cursor-pointer w-full" onClick={() => navigate(`/promotions/${activePromo.id}`)}>
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-[2rem] blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
             
             <div className="relative h-64 w-full rounded-[2rem] overflow-hidden shadow-2xl">
@@ -110,7 +104,7 @@ const Promotions: React.FC = () => {
         </div>
 
         {/* History / Drafts Grid */}
-        <div>
+        <div className="w-full">
             <div className="flex justify-between items-end mb-5 px-1">
                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">Historique</h3>
                 <button className="text-xs text-blue-500 hover:text-blue-400 transition font-medium flex items-center gap-1">
@@ -118,12 +112,12 @@ const Promotions: React.FC = () => {
                 </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 w-full">
                 {historyPromos.map((promo) => (
                     <div 
                         key={promo.id}
                         onClick={() => navigate(`/promotions/${promo.id}`)}
-                        className="glass-panel p-2 rounded-2xl flex items-center gap-4 hover:bg-black/5 dark:hover:bg-white/5 transition group active:scale-[0.98] cursor-pointer pr-4 overflow-hidden"
+                        className="glass-panel p-2 rounded-2xl flex items-center gap-4 hover:bg-black/5 dark:hover:bg-white/5 transition group active:scale-[0.98] cursor-pointer pr-4 overflow-hidden w-full"
                     >
                         {/* Mini Image Thumbnail */}
                         <div className="w-20 h-20 rounded-xl overflow-hidden relative flex-shrink-0">
@@ -143,7 +137,7 @@ const Promotions: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="text-right">
+                        <div className="text-right flex-shrink-0">
                             <span className="block text-sm font-bold text-gray-900 dark:text-white">{promo.stats.revenue}</span>
                             <span className="text-[10px] text-gray-500">Générés</span>
                         </div>

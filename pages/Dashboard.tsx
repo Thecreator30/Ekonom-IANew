@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '../context/ThemeContext';
-import { Users, Ticket, ArrowUpRight, Sparkles, Plus, Activity, Bell } from 'lucide-react';
-import Logo from '../components/Logo';
+import { Users, Ticket, ArrowUpRight, Plus, Activity, Bell, Sparkles } from 'lucide-react';
+import EkoBot from '../components/EkoBot';
 
 const Dashboard: React.FC = () => {
   const currentHour = new Date().getHours();
@@ -9,7 +9,7 @@ const Dashboard: React.FC = () => {
   if (currentHour >= 18) greeting = "Bonsoir";
 
   return (
-    <div className="px-5 pt-8 animate-fade-in text-gray-900 dark:text-white">
+    <div className="px-5 pt-8 animate-fade-in text-gray-900 dark:text-white pb-24">
       {/* Top Bar */}
       <div className="flex justify-between items-center mb-8">
         <Link to="/settings" className="flex items-center gap-3 group">
@@ -21,10 +21,10 @@ const Dashboard: React.FC = () => {
             <p className="text-xs text-gray-500 dark:text-gray-400">Boutique St-Honoré • <span className="text-green-500 font-medium">Ouvert</span></p>
           </div>
         </Link>
-        <button className="w-10 h-10 rounded-full bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-center relative hover:bg-gray-50 dark:hover:bg-white/10 transition shadow-sm">
+        <Link to="/notifications" className="w-10 h-10 rounded-full bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-center relative hover:bg-gray-50 dark:hover:bg-white/10 transition shadow-sm">
           <Bell size={20} className="text-gray-600 dark:text-gray-300" />
           <span className="absolute top-2.5 right-3 w-1.5 h-1.5 bg-red-500 rounded-full shadow-[0_0_8px_red]"></span>
-        </button>
+        </Link>
       </div>
 
       {/* Bento Grid Layout */}
@@ -69,9 +69,12 @@ const Dashboard: React.FC = () => {
         {/* Action Card 2: Eko Insight */}
         <Link to="/assistant" className="glass-panel rounded-[2rem] p-5 relative overflow-hidden group hover:border-purple-500/20 transition-all active:scale-98">
              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
-            <div className="w-10 h-10 rounded-full bg-purple-500/10 dark:bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-3 border border-purple-500/10 dark:border-purple-500/20">
-               <Sparkles size={20} />
-            </div>
+             
+             {/* EkoBot Integration */}
+             <div className="mb-3">
+               <EkoBot size="md" mood="happy" className="scale-75 origin-top-left" />
+             </div>
+
             <h3 className="font-bold text-lg leading-tight mb-1 text-gray-900 dark:text-white">Demander<br/>à Eko</h3>
             <p className="text-xs text-gray-500">Assistant IA</p>
         </Link>
@@ -102,13 +105,16 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Eko Insight Bar */}
-      <div className="glass-panel rounded-2xl p-1 pr-4 flex items-center gap-3 mb-8 hover:bg-black/5 dark:hover:bg-white/5 transition cursor-pointer border-l-4 border-l-purple-500 shadow-sm">
-         <div className="w-10 h-10 rounded-xl bg-purple-500/10 dark:bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-            <Sparkles size={18} className="text-purple-600 dark:text-purple-400 animate-pulse" />
+      <div className="glass-panel rounded-2xl p-2 pr-4 flex items-center gap-3 mb-8 hover:bg-black/5 dark:hover:bg-white/5 transition cursor-pointer border-l-4 border-l-purple-500 shadow-sm relative overflow-hidden">
+         {/* Subtle background glow */}
+         <div className="absolute right-0 top-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl"></div>
+         
+         <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
+            <EkoBot size="sm" mood="thinking" />
          </div>
-         <div className="flex-1">
-            <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider">Insight Eko</p>
-            <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-1">Vos ventes de café baissent le mardi. Lancez une offre flash ?</p>
+         <div className="flex-1 relative z-10">
+            <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-0.5">Insight Eko</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300 font-medium leading-snug">Vos ventes de café baissent le mardi. Lancez une offre flash ?</p>
          </div>
          <ArrowUpRight size={16} className="text-gray-400" />
       </div>

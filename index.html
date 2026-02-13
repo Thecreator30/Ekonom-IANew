@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Ekonom-IA | Eko OS</title>
     
-    <!-- Tailwind CDN : Indispensable pour garantir le rendu -->
+    <!-- Tailwind CDN pour le prototypage rapide (Production: utiliser PostCSS est mieux, mais CDN fonctionne ici) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     
-    <!-- Configuration Tailwind immédiate -->
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -24,7 +23,7 @@
               primary: "#2563EB", 
               secondary: "#C026D3", 
               accent: "#00E0FF", 
-              "background-light": "#F2F4F8",
+              "background-light": "#F2F4F8", 
               "background-dark": "#050505", 
               "surface-light": "#FFFFFF",
               "surface-dark": "#0F0F0F",
@@ -34,6 +33,10 @@
               'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
               'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'scan': 'scan 2s linear infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'shimmer': 'shimmer 8s linear infinite',
+              'reflection': 'reflection 10s linear infinite',
             },
             keyframes: {
               blob: {
@@ -49,59 +52,79 @@
               slideUp: {
                 '0%': { opacity: '0', transform: 'translateY(20px)' },
                 '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              },
+              reflection: {
+                '0%': { transform: 'translateX(-100%) skewX(-12deg)' },
+                '100%': { transform: 'translateX(200%) skewX(-12deg)' },
+              },
+              scan: {
+                '0%': { top: '0%' },
+                '50%': { top: '100%' },
+                '100%': { top: '0%' },
               }
+            },
+            boxShadow: {
+              'glow': '0 0 20px rgba(59, 130, 246, 0.5)',
+              'glow-secondary': '0 0 20px rgba(217, 70, 239, 0.5)',
             }
           },
         },
       };
     </script>
 
-    <!-- CSS de secours critique -->
     <style>
       body {
         background-color: #050505;
         -webkit-font-smoothing: antialiased;
       }
-      
-      /* Glassmorphism Forcé */
+      /* Glass Panel: Opacity reduced to max 15% */
       .glass-panel {
-        background: rgba(20, 20, 20, 0.2) !important;
+        background: rgba(20, 20, 20, 0.15) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
       }
-      
       html.light .glass-panel {
-        background: rgba(255, 255, 255, 0.2) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
       }
-
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
   <script type="importmap">
 {
   "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
     "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
     "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "buffer": "https://esm.sh/buffer@^6.0.3",
-    "cors": "https://esm.sh/cors@^2.8.6",
-    "dotenv": "https://esm.sh/dotenv@^17.3.1",
     "express": "https://esm.sh/express@^5.2.1",
+    "helmet": "https://esm.sh/helmet@^8.1.0",
+    "cors": "https://esm.sh/cors@^2.8.6",
+    "cookie-parser": "https://esm.sh/cookie-parser@^1.4.7",
+    "dotenv": "https://esm.sh/dotenv@^17.3.1",
     "jsonwebtoken": "https://esm.sh/jsonwebtoken@^9.0.3",
     "crypto": "https://esm.sh/crypto@^1.0.1",
+    "buffer": "https://esm.sh/buffer@^6.0.3",
     "pg": "https://esm.sh/pg@^8.18.0",
-    "cookie-parser": "https://esm.sh/cookie-parser@^1.4.7",
-    "helmet": "https://esm.sh/helmet@^8.1.0"
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
+    <!-- Point d'entrée essentiel pour Vite/React -->
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

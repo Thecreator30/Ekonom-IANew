@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Bell, Tag, Clock, Share2, Download, Link as LinkIcon, Copy, Palette, Layout, Save, RefreshCw, ShieldCheck, Scan, Ticket, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Bell, Tag, Clock, Palette, Layout, Save, RefreshCw, ShieldCheck, Scan, Ticket, CheckCircle } from 'lucide-react';
 import { useNavigate } from '../context/ThemeContext';
 import { api } from '../services/api';
 
@@ -9,7 +8,7 @@ const QrConfig: React.FC = () => {
   const [qrColor, setQrColor] = useState('3B82F6'); // Default Blue
   const [selectedFrame, setSelectedFrame] = useState('gradient');
   
-  // Data State - Conservation de la logique Antigravity
+  // Data State
   const [isLoading, setIsLoading] = useState(false);
   const [discountValue, setDiscountValue] = useState(10);
   const [discountType, setDiscountType] = useState('percent');
@@ -88,19 +87,20 @@ const QrConfig: React.FC = () => {
             <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2"></div>
         </div>
 
-        {/* Header */}
-        <header className="px-6 pt-10 pb-6 flex items-center justify-between relative z-10 flex-shrink-0">
-            <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition">
+        {/* Header - px-5 */}
+        <header className="px-5 pt-10 pb-6 flex items-center justify-between relative z-10 flex-shrink-0">
+            <button onClick={() => navigate('/dashboard')} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition">
                 <ArrowLeft size="24" className="text-gray-700 dark:text-gray-200" />
             </button>
             <h1 className="text-base font-bold tracking-wide text-gray-900 dark:text-white">Offre de Bienvenue</h1>
-            <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition relative">
+            <button onClick={() => navigate('/notifications')} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition relative">
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-background-light dark:border-background-dark"></span>
                 <Bell size="24" className="text-gray-700 dark:text-gray-200" />
             </button>
         </header>
 
-        <main className="px-6 relative z-10 flex-1 overflow-y-auto no-scrollbar pb-24">
+        {/* Main Content - px-5 */}
+        <main className="px-5 relative z-10 flex-1 overflow-y-auto no-scrollbar pb-24">
             <div className="mb-6 text-center">
                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wide mb-4 border border-blue-200 dark:border-blue-500/30">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
@@ -263,33 +263,11 @@ const QrConfig: React.FC = () => {
                             <img 
                                 src={qrUrl}
                                 alt="QR Code" 
-                                className="w-48 h-48 rounded-lg mix-blend-multiply"
+                                className="w-44 h-44 rounded-lg mix-blend-multiply"
                             />
                          </div>
                     </div>
                 )}
-                
-                <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center space-x-3 max-w-full">
-                    <LinkIcon size="14" className="text-gray-400 flex-shrink-0" />
-                    <span className="text-xs text-gray-500 dark:text-gray-400 truncate font-mono">
-                        {signedToken ? `...${signedToken.substring(0, 20)}...` : 'Generating token...'}
-                    </span>
-                    <button className="text-primary hover:text-blue-400 transition ml-auto">
-                        <Copy size="14" />
-                    </button>
-                </div>
-            </div>
-
-            {/* Actions */}
-            <div className="grid grid-cols-2 gap-4 pb-8">
-                <button className="flex items-center justify-center px-4 py-3.5 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-200 font-semibold hover:bg-white/40 dark:hover:bg-white/5 transition-colors glass-panel shadow-sm">
-                    <Share2 size="20" className="mr-2" />
-                    Partager
-                </button>
-                <button className="flex items-center justify-center px-4 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold shadow-lg shadow-purple-500/30 hover:opacity-90 active:scale-95 transition-all">
-                    <Download size="20" className="mr-2" />
-                    Télécharger
-                </button>
             </div>
         </main>
     </div>

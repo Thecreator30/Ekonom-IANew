@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation, Link } from '../context/ThemeContext';
-import { Home, Ticket, Megaphone, Users, Sparkles } from 'lucide-react';
+import { Home, Ticket, Megaphone, Users } from 'lucide-react';
+import EkoBot from './EkoBot';
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -10,7 +11,7 @@ const Layout: React.FC = () => {
     <div className="flex flex-col h-full w-full bg-transparent relative overflow-hidden">
       
       {/* Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-28">
+      <div className="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-28 w-full">
         <Outlet />
       </div>
 
@@ -30,14 +31,17 @@ const Layout: React.FC = () => {
             {isActive('/coupons') && <div className="absolute -bottom-1 w-1 h-1 bg-black dark:bg-white rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] dark:shadow-[0_0_8px_white]"></div>}
           </Link>
 
-          {/* Eko Button (Center) */}
-          <Link to="/assistant" className="relative -top-6 group">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-60 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
-            <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#0F0F0F] border border-gray-100 dark:border-white/10 relative flex items-center justify-center shadow-2xl transform transition-transform duration-300 group-active:scale-95 group-hover:-translate-y-1">
-               <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-               <Sparkles size={28} className="text-gray-900 dark:text-white fill-gray-900/10 dark:fill-white/20" />
+          {/* Eko Button (Center - Floating Character) */}
+          <Link to="/assistant" className="relative -top-8 group flex flex-col items-center justify-center z-30 outline-none" aria-label="Ouvrir l'Assistant Eko">
+            {/* Glow effect behind the character */}
+            <div className="absolute top-2 w-16 h-16 bg-blue-500/40 rounded-full blur-xl opacity-60 group-hover:opacity-100 transition duration-500 animate-pulse-slow pointer-events-none"></div>
+            
+            {/* The Bot itself acting as the button */}
+            <div className="relative z-10 transform transition-all duration-300 group-active:scale-95 group-hover:-translate-y-2">
+               <EkoBot size="md" mood="happy" className="scale-125 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] filter contrast-125" />
             </div>
-            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">EKO</span>
+
+            <span className="absolute -bottom-8 text-[10px] font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">EKO</span>
           </Link>
 
           <Link to="/subscribers" className="relative group w-14 h-12 flex items-center justify-center">
