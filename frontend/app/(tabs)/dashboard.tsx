@@ -10,7 +10,7 @@ import { clearTokens } from "../../services/storage"; // Fixed path
 
 export default function DashboardScreen() {
     const router = useRouter();
-    const [promotions, setPromotions] = useState<any[]>([]);
+    const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,11 +19,10 @@ export default function DashboardScreen() {
 
     const loadData = async () => {
         try {
-            const data = await api.promotions.list();
-            setPromotions(data);
+            const data = await api.dashboard.stats();
+            setStats(data);
         } catch (error) {
             console.error(error);
-            // Optional: Alert.alert("Erreur", "Impossible de charger les données");
         } finally {
             setLoading(false);
         }
@@ -85,7 +84,7 @@ export default function DashboardScreen() {
                                 className="bg-white py-3 px-6 rounded-xl self-start flex-row items-center shadow-lg"
                                 onPress={() => router.push("/promotions/oxy")}
                             >
-                                <Text className="text-primary font-bold mr-2">Générer avec OXY</Text>
+                                <Text className="text-primary font-bold mr-2">Générer avec Eko</Text>
                                 <ArrowRight size={16} color="#7c3aed" />
                             </TouchableOpacity>
                         </View>
@@ -97,14 +96,14 @@ export default function DashboardScreen() {
                             <View className="bg-primary/20 p-2 rounded-xl self-start mb-3">
                                 <Users size={20} color="#a78bfa" />
                             </View>
-                            <Text className="text-3xl font-bold text-white mb-1">0</Text>
+                            <Text className="text-3xl font-bold text-white mb-1">{stats?.totalSubscribers || 0}</Text>
                             <Text className="text-slate-400 text-xs uppercase tracking-wide">Abonnés</Text>
                         </View>
                         <View className="flex-1 bg-white/5 border border-white/10 p-5 rounded-3xl backdrop-blur-md">
                             <View className="bg-secondary/20 p-2 rounded-xl self-start mb-3">
                                 <Tag size={20} color="#e879f9" />
                             </View>
-                            <Text className="text-3xl font-bold text-white mb-1">{promotions.length}</Text>
+                            <Text className="text-3xl font-bold text-white mb-1">{stats?.activePromotions || 0}</Text>
                             <Text className="text-slate-400 text-xs uppercase tracking-wide">Promos Actives</Text>
                         </View>
                     </View>
@@ -121,22 +120,22 @@ export default function DashboardScreen() {
                         <View className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden min-h-[100px]">
                             {loading ? (
                                 <View className="p-8 items-center"><Text className="text-slate-500">Chargement...</Text></View>
-                            ) : promotions.length === 0 ? (
+                            ) : !stats?.recentActivity?.length ? (
                                 <View className="p-8 items-center"><Text className="text-slate-500">Aucune activité récente</Text></View>
                             ) : (
-                                promotions.slice(0, 3).map((promo, i) => (
-                                    <View key={i} className={`p-4 flex-row items-center border-b border-white/5 ${i === promotions.length - 1 ? 'border-b-0' : ''}`}>
+                                stats.recentActivity.map((log: any, i: number) => (
+                                    <View key={i} className={`p-4 flex-row items-center border-b border-white/5 ${i === stats.recentActivity.length - 1 ? 'border-b-0' : ''}`}>
                                         <View className="w-10 h-10 rounded-full bg-slate-800 items-center justify-center mr-4 border border-white/5">
-                                            <Tag size={18} color="#94a3b8" />
+                                            <Bell size={18} color="#94a3b8" />
                                         </View>
                                         <View className="flex-1">
-                                            <Text className="text-white font-semibold">{promo.title}</Text>
+                                            <Text className="text-white font-semibold">{log.action}</Text>
                                             <Text className="text-slate-500 text-xs">
-                                                {new Date(promo.created_at).toLocaleDateString()}
+                                                {new Date(log.created_at).toLocaleDateString()}
                                             </Text>
                                         </View>
-                                        <Text className={`font-bold text-xs px-2 py-1 rounded ${promo.status === 'PUBLISHED' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700 text-slate-300'}`}>
-                                            {promo.status}
+                                        <Text className={`font-bold text-xs px-2 py-1 rounded ${log.severity === 'HIGH' ? 'bg-red-500/20 text-red-400' : 'bg-slate-700 text-slate-300'}`}>
+                                            {log.severity}
                                         </Text>
                                     </View>
                                 ))

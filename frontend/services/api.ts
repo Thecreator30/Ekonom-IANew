@@ -91,5 +91,25 @@ export const api = {
             const response = await client.post('/coupons/redeem', { code });
             return response.data;
         }
+    },
+    dashboard: {
+        stats: async () => {
+            const response = await client.get('/dashboard/stats');
+            return response.data;
+        }
+    },
+    settings: {
+        profile: async () => {
+            const response = await client.get('/settings/profile');
+            return response.data;
+        },
+        updateProfile: async (data: any) => {
+            const response = await client.patch('/settings/profile', data);
+            return response.data;
+        },
+        securityLogs: async () => {
+            const response = await client.get('/settings/security');
+            return response.data;
+        }
     }
 };
