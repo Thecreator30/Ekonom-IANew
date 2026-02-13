@@ -1,15 +1,36 @@
-import { View, Text, TouchableOpacity, TextInput, Image, Platform } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Image, Platform, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Store, ArrowRight, Mail, Lock } from "lucide-react-native";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
+import { api } from "../services/api";
+import { saveTokens } from "../services/storage";
 
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert("Erreur", "Veuillez remplir tous les champs");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await api.auth.login(email, password);
+            await saveTokens(response.accessToken, response.refreshToken);
+            router.replace("/(tabs)/dashboard");
+        } catch (error: any) {
+            Alert.alert("Erreur de connexion", error.response?.data?.error || "Identifiants incorrects");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <View className="flex-1 bg-background">
@@ -82,8 +103,9 @@ export default function LoginScreen() {
                     {/* Actions */}
                     <View className="mt-8 space-y-4">
                         <TouchableOpacity
-                            className="w-full rounded-xl flex-row justify-center items-center shadow-lg shadow-primary/30 overflow-hidden group"
-                            onPress={() => router.replace("/(tabs)/dashboard")}
+                            className={`w-full rounded-xl flex-row justify-center items-center shadow-lg shadow-primary/30 overflow-hidden group ${loading ? 'opacity-70' : ''}`}
+                            onPress={handleLogin}
+                            disabled={loading}
                         >
                             <LinearGradient
                                 colors={['#7c3aed', '#c026d3']}
@@ -92,13 +114,16 @@ export default function LoginScreen() {
                                 end={{ x: 1, y: 0.5 }}
                             />
                             <View className="py-4 flex-row items-center">
-                                <Text className="text-white font-bold text-lg mr-2 tracking-wide">Accéder au Console</Text>
-                                <ArrowRight size={20} color="white" />
+                                <Text className="text-white font-bold text-lg mr-2 tracking-wide">
+                                    {loading ? "Connexion..." : "Accéder au Console"}
+                                </Text>
+                                {!loading && <ArrowRight size={20} color="white" />}
                             </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             className="w-full bg-white/5 py-4 rounded-xl flex-row justify-center items-center border border-white/10 hover:bg-white/10 transition-colors"
+                            onPress={() => Alert.alert("Beta", "L'inscription est fermée pour la beta.")}
                         >
                             <Text className="text-white font-semibold text-lg tracking-wide">Créer un compte</Text>
                         </TouchableOpacity>

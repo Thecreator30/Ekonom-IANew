@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { LayoutDashboard, Users, Tag, ScanLine, Store } from "lucide-react-native";
+import { LayoutDashboard, Users, Tag, ScanLine, Store, QrCode } from "lucide-react-native";
 import { View } from "react-native";
 
 export default function TabLayout() {
@@ -38,12 +38,12 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="scan"
+                name="qr" // Changed from 'scan' to 'qr' to match folder name
                 options={{
-                    title: "Scan",
+                    title: "QR Code",
                     tabBarIcon: ({ color }) => (
                         <View className="bg-blue-600 p-4 rounded-full -mt-8 shadow-lg shadow-blue-300 border-4 border-white">
-                            <ScanLine size={24} color="white" />
+                            <QrCode size={24} color="white" />
                         </View>
                     ),
                     tabBarLabel: () => null,

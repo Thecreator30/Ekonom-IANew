@@ -55,7 +55,10 @@ export default function OxyScreen() {
                                 <RefreshCw size={16} color="#64748b" className="mr-2" />
                                 <Text className="text-slate-600 font-bold text-xs">Try Again</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity className="flex-row items-center bg-blue-50 px-3 py-2 rounded-lg">
+                            <TouchableOpacity
+                                className="flex-row items-center bg-blue-50 px-3 py-2 rounded-lg"
+                                onPress={() => router.push({ pathname: "/promotions/create", params: { description: result } })}
+                            >
                                 <Copy size={16} color="#2563eb" className="mr-2" />
                                 <Text className="text-blue-600 font-bold text-xs">Use This</Text>
                             </TouchableOpacity>
