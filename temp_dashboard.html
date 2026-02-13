@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ekonom-IA Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6", // Blue primary color as a safe SaaS default
+                        "primary-dark": "#2563EB",
+                        "accent": "#8B5CF6", // Purple accent similar to the landing page hints
+                        "background-light": "#F3F4F6", // Light gray background
+                        "background-dark": "#111827", // Dark mode background (fallback)
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1F2937",
+                        "text-light": "#1F2937",
+                        "text-dark": "#F9FAFB",
+                        "subtext-light": "#6B7280",
+                        "subtext-dark": "#9CA3AF"
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        'xl': "1rem",
+                        '2xl': "1.5rem"
+                    },
+                },
+            },
+        };
+    </script>
+<style>.bg-gradient-subtle {
+            background: linear-gradient(135deg, #F3F4F6 0%, #EDF2F7 100%);
+        }
+        .dark .bg-gradient-subtle {
+            background: linear-gradient(135deg, #111827 0%, #0F172A 100%);
+        }.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans min-h-screen antialiased pb-20">
+<header class="flex justify-between items-center px-5 py-4 bg-surface-light dark:bg-surface-dark sticky top-0 z-30 shadow-sm">
+<div class="flex items-center gap-3">
+<button class="text-subtext-light dark:text-subtext-dark focus:outline-none">
+<span class="material-icons-round text-2xl">menu</span>
+</button>
+<h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Ekonom-IA</h1>
+</div>
+<div class="relative">
+<img alt="Profile" class="w-9 h-9 rounded-full border-2 border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxGBzh3exwQu0DJIQm2wvfbhND6JRb_XqI7kIAr2TIjTLhnmmg67bzDFtaPf8JoB6iknj70Cyc0k8i4jTalLka9EBTWHN8pWI2iPv1EjEnguVUQ2kRT1zCaHn_T48YtslxbMAZOXr59wKDPt4A6W7AdT2dl3UVPmc9L63XK2jQStfh-DjV1Ih8uWCQuJemLHrlgoKMaz1u6YSTaxbliKggXnEZJhvo5HtC_2tk2WKKRN0jl45SFmX1pZG3WqeXWGZ6Bih1qLY5Zso"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></span>
+</div>
+</header>
+<main class="px-5 pt-6">
+<div class="mb-6">
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Bonjour, Thomas 👋</h2>
+<p class="text-sm text-subtext-light dark:text-subtext-dark mt-1">Voici ce qui se passe dans votre boutique aujourd'hui.</p>
+</div>
+<div class="flex overflow-x-auto gap-4 pb-4 -mx-5 px-5 no-scrollbar snap-x">
+<div class="min-w-[260px] snap-center bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-round text-6xl text-primary">people</span>
+</div>
+<div class="flex items-center justify-between mb-4">
+<div class="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg">
+<span class="material-icons-round text-primary text-xl">people_outline</span>
+</div>
+<span class="flex items-center text-xs font-medium text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
+<span class="material-icons-round text-sm mr-1">trending_up</span> +12%
+                    </span>
+</div>
+<div>
+<p class="text-sm text-subtext-light dark:text-subtext-dark font-medium">Nombre Abonnés</p>
+<h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">1,248</h3>
+</div>
+</div>
+<div class="min-w-[260px] snap-center bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-round text-6xl text-accent">local_offer</span>
+</div>
+<div class="flex items-center justify-between mb-4">
+<div class="bg-purple-50 dark:bg-purple-900/30 p-2 rounded-lg">
+<span class="material-icons-round text-accent text-xl">confirmation_number</span>
+</div>
+<span class="text-xs font-medium text-subtext-light dark:text-subtext-dark bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                        3 terminent bientôt
+                    </span>
+</div>
+<div>
+<p class="text-sm text-subtext-light dark:text-subtext-dark font-medium">Coupons Actifs</p>
+<h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">8</h3>
+</div>
+</div>
+<div class="min-w-[260px] snap-center bg-gradient-to-br from-primary to-accent text-white p-5 rounded-xl shadow-lg relative overflow-hidden">
+<div class="absolute -bottom-4 -right-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+<div class="flex items-center justify-between mb-4">
+<div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+<span class="material-icons-round text-white text-xl">campaign</span>
+</div>
+<span class="text-xs font-medium bg-white/20 text-white px-2 py-1 rounded-full backdrop-blur-sm">
+                        En cours
+                    </span>
+</div>
+<div>
+<p class="text-sm text-blue-100 font-medium">Dernière Promotion</p>
+<h3 class="text-xl font-bold mt-1 truncate">Soldes d'Été Flash</h3>
+<p class="text-xs text-blue-100 mt-2 flex items-center">
+<span class="material-icons-round text-sm mr-1">schedule</span> Fin: 24h 12m
+                    </p>
+</div>
+</div>
+</div>
+<div class="mt-2 grid grid-cols-2 gap-3 mb-8">
+<button class="flex flex-col items-center justify-center p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors group">
+<div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+<span class="material-icons-round text-primary">add</span>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300">Nouvelle Promo</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-dashed border-gray-300 dark:border-gray-600 hover:border-accent dark:hover:border-accent hover:bg-purple-50 dark:hover:bg-gray-800 transition-colors group">
+<div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+<span class="material-icons-round text-accent">auto_awesome</span>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300">Générer Contenu IA</span>
+</button>
+</div>
+<div class="mb-8">
+<div class="flex justify-between items-end mb-4">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Activités Récentes</h3>
+<a class="text-sm text-primary font-medium hover:underline" href="#">Voir tout</a>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
+<div class="p-4 flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex-shrink-0 flex items-center justify-center">
+<span class="material-icons-round text-green-600 dark:text-green-400 text-lg">person_add</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-gray-900 dark:text-white">Nouvel abonné</p>
+<p class="text-xs text-subtext-light dark:text-subtext-dark mt-0.5">Sophie Martin a rejoint votre liste.</p>
+<p class="text-xs text-gray-400 mt-2">Il y a 2 min</p>
+</div>
+</div>
+<div class="p-4 flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex-shrink-0 flex items-center justify-center">
+<span class="material-icons-round text-orange-600 dark:text-orange-400 text-lg">redeem</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-gray-900 dark:text-white">Coupon utilisé</p>
+<p class="text-xs text-subtext-light dark:text-subtext-dark mt-0.5">Code <span class="font-mono bg-gray-100 dark:bg-gray-600 px-1 rounded text-gray-700 dark:text-gray-200">WELCOME20</span> utilisé 5 fois.</p>
+<p class="text-xs text-gray-400 mt-2">Il y a 1 heure</p>
+</div>
+</div>
+<div class="p-4 flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex-shrink-0 flex items-center justify-center">
+<span class="material-icons-round text-accent text-lg">smart_toy</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-gray-900 dark:text-white">Campagne IA générée</p>
+<p class="text-xs text-subtext-light dark:text-subtext-dark mt-0.5">Votre campagne "Retour Printemps" est prête.</p>
+<p class="text-xs text-gray-400 mt-2">Il y a 3 heures</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-24">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Suggestion IA du jour</h3>
+<div class="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-black rounded-xl p-5 shadow-lg text-white relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-accent opacity-20 rounded-full blur-3xl -mr-10 -mt-10"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-icons-round text-accent">auto_awesome</span>
+<span class="text-xs font-semibold uppercase tracking-wider text-gray-300">Ekonom-IA Insight</span>
+</div>
+<p class="text-sm text-gray-200 mb-4 leading-relaxed">
+                        Les ventes chutent généralement le mardi. Lancez une "Offre Flash Mardi" pour vos 1248 abonnés pour booster le trafic.
+                    </p>
+<button class="w-full py-2.5 bg-white text-gray-900 text-sm font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-sm">
+                        Créer cette campagne
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pb-safe pt-2 px-6 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex justify-between items-center pb-2">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-icons-round">dashboard</span>
+<span class="text-[10px] font-medium">Accueil</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-subtext-light dark:text-subtext-dark hover:text-gray-900 dark:hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-round">campaign</span>
+<span class="text-[10px] font-medium">Promos</span>
+</a>
+<div class="relative -top-6">
+<button class="w-14 h-14 rounded-full bg-primary text-white shadow-lg shadow-blue-500/30 flex items-center justify-center transform transition-transform active:scale-95">
+<span class="material-icons-round text-2xl">qr_code_scanner</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-subtext-light dark:text-subtext-dark hover:text-gray-900 dark:hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-round">groups</span>
+<span class="text-[10px] font-medium">Abonnés</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-subtext-light dark:text-subtext-dark hover:text-gray-900 dark:hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-round">local_offer</span>
+<span class="text-[10px] font-medium">Coupons</span>
+</a>
+</div>
+</nav>
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+
+</body></html>

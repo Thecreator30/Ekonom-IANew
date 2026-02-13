@@ -1,17 +1,18 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert, RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TrendingUp, Users, Tag, Plus, ArrowRight, Bell, Sparkles, LogOut } from "lucide-react-native";
+import { TrendingUp, Users, Tag, Plus, ArrowRight, Bell, Sparkles, LogOut, Menu, User, Calendar, Gift } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { api } from "../../services/api"; // Fixed path
-import { clearTokens } from "../../services/storage"; // Fixed path
+import { api } from "../../services/api";
+import { clearTokens } from "../../services/storage";
 
 export default function DashboardScreen() {
     const router = useRouter();
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         loadData();
@@ -25,7 +26,13 @@ export default function DashboardScreen() {
             console.error(error);
         } finally {
             setLoading(false);
+            setRefreshing(false);
         }
+    };
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        loadData();
     };
 
     const handleLogout = async () => {
@@ -34,125 +41,179 @@ export default function DashboardScreen() {
     };
 
     return (
-        <View className="flex-1 bg-background">
-            <StatusBar style="light" />
+        <View className="flex-1 bg-slate-50 dark:bg-slate-900">
+            <StatusBar style="dark" />
 
-            {/* Background Gradient */}
-            <View className="absolute top-0 left-0 right-0 h-[300px] opacity-20">
-                <LinearGradient
-                    colors={['#7c3aed', 'transparent']}
-                    style={{ flex: 1 }}
-                    start={{ x: 0.5, y: 0 }}
-                    end={{ x: 0.5, y: 1 }}
-                />
+            {/* Header */}
+            <View className="px-5 pt-14 pb-4 bg-white dark:bg-slate-800 flex-row justify-between items-center shadow-sm z-10">
+                <View className="flex-row items-center gap-3">
+                    <TouchableOpacity className="p-2 -ml-2">
+                        <Menu size={24} color="#64748b" />
+                    </TouchableOpacity>
+                    <Text className="text-xl font-bold bg-clip-text text-transparent" style={{ color: '#3b82f6' }}>
+                        Ekonom-IA
+                    </Text>
+                </View>
+                <TouchableOpacity onPress={handleLogout}>
+                    <Image
+                        source={{ uri: "https://api.dicebear.com/7.x/avataaars/png?seed=Felix" }}
+                        className="w-10 h-10 rounded-full border-2 border-blue-100"
+                    />
+                    <View className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
+                </TouchableOpacity>
             </View>
 
-            <SafeAreaView className="flex-1">
-                <ScrollView className="flex-1 px-5" contentContainerStyle={{ paddingBottom: 100 }}>
+            <ScrollView
+                className="flex-1"
+                contentContainerStyle={{ paddingBottom: 100 }}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
+                <View className="px-5 pt-6 mb-6">
+                    <Text className="text-2xl font-bold text-slate-900 dark:text-white">Bonjour, Thomas 👋</Text>
+                    <Text className="text-sm text-slate-500 mt-1">Voici ce qui se passe dans votre boutique.</Text>
+                </View>
 
-                    {/* Header */}
-                    <View className="flex-row justify-between items-center py-4 mb-6">
-                        <View>
-                            <Text className="text-slate-400 text-sm font-medium uppercase tracking-wider">Merchant Console</Text>
-                            <Text className="text-white text-2xl font-bold">Bonjour 👋</Text>
+                {/* KPI Carousel */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pl-5 pb-6 -mr-5 gap-4" contentContainerStyle={{ paddingRight: 40 }}>
+                    {/* Subscribers Card */}
+                    <View className="min-w-[260px] bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+                        <View className="absolute top-0 right-0 p-4 opacity-10">
+                            <Users size={80} color="#3b82f6" />
                         </View>
-                        <TouchableOpacity
-                            className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
-                            onPress={handleLogout}
-                        >
-                            <LogOut size={20} color="#94a3b8" />
+                        <View className="flex-row justify-between mb-4">
+                            <View className="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-xl">
+                                <Users size={24} color="#3b82f6" />
+                            </View>
+                            <View className="bg-green-50 px-2 py-1 rounded-full flex-row items-center">
+                                <TrendingUp size={14} color="#16a34a" />
+                                <Text className="text-xs font-bold text-green-600 ml-1">+12%</Text>
+                            </View>
+                        </View>
+                        <Text className="text-slate-500 text-sm font-medium">Nombre Abonnés</Text>
+                        <Text className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{stats?.totalSubscribers || 0}</Text>
+                    </View>
+
+                    {/* Active Promotions Card */}
+                    <View className="min-w-[260px] bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+                        <View className="absolute top-0 right-0 p-4 opacity-10">
+                            <Tag size={80} color="#8b5cf6" />
+                        </View>
+                        <View className="flex-row justify-between mb-4">
+                            <View className="bg-purple-50 dark:bg-purple-900/30 p-2 rounded-xl">
+                                <Tag size={24} color="#8b5cf6" />
+                            </View>
+                            <Text className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">En cours</Text>
+                        </View>
+                        <Text className="text-slate-500 text-sm font-medium">Promotions Actives</Text>
+                        <Text className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{stats?.activePromotions || 0}</Text>
+                    </View>
+
+                    {/* AI Usage Card */}
+                    <View className="min-w-[260px] bg-indigo-600  p-5 rounded-2xl shadow-lg shadow-indigo-500/30 relative overflow-hidden">
+                        <View className="absolute -bottom-4 -right-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl" />
+                        <View className="flex-row justify-between mb-4">
+                            <View className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                                <Sparkles size={24} color="white" />
+                            </View>
+                            <Text className="text-xs font-bold text-white bg-white/20 px-2 py-1 rounded-full">Beta</Text>
+                        </View>
+                        <Text className="text-indigo-100 text-sm font-medium">Contenu IA Généré</Text>
+                        <Text className="text-3xl font-bold text-white mt-1">{stats?.aiUsage || 0}</Text>
+                        <Text className="text-xs text-indigo-200 mt-2 flex-row items-center">
+                            <Calendar size={12} color="#c7d2fe" /> Cette semaine
+                        </Text>
+                    </View>
+                </ScrollView>
+
+                {/* Quick Actions */}
+                <View className="px-5 mb-8 flex-row gap-3">
+                    <TouchableOpacity
+                        className="flex-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-dashed border-slate-300 items-center active:bg-blue-50"
+                        onPress={() => router.push("/promotions/create")}
+                    >
+                        <View className="w-12 h-12 rounded-full bg-blue-100 items-center justify-center mb-2">
+                            <Plus size={24} color="#3b82f6" />
+                        </View>
+                        <Text className="text-xs font-bold text-slate-700">Nouvelle Promo</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        className="flex-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-dashed border-slate-300 items-center active:bg-purple-50"
+                        onPress={() => router.push("/promotions/oxy")}
+                    >
+                        <View className="w-12 h-12 rounded-full bg-purple-100 items-center justify-center mb-2">
+                            <Sparkles size={24} color="#8b5cf6" />
+                        </View>
+                        <Text className="text-xs font-bold text-slate-700">Générer avec IA</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Recent Activity */}
+                <View className="px-5 mb-8">
+                    <View className="flex-row justify-between items-end mb-4">
+                        <Text className="text-lg font-bold text-slate-900">Activités Récentes</Text>
+                        <TouchableOpacity onPress={loadData}>
+                            <Text className="text-blue-600 font-semibold text-sm">Rafraîchir</Text>
                         </TouchableOpacity>
                     </View>
 
-                    {/* Quick Actions / AI Banner */}
-                    <View className="relative overflow-hidden rounded-3xl mb-8 group">
-                        <LinearGradient
-                            colors={['#7c3aed', '#c026d3']}
-                            style={{ position: 'absolute', width: '100%', height: '100%' }}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            className="opacity-90"
-                        />
-                        <View className="p-6">
-                            <View className="flex-row items-center mb-2">
-                                <Sparkles size={20} color="#fcd34d" className="mr-2" />
-                                <Text className="text-yellow-300 font-bold uppercase tracking-wider text-xs">AI Copilot v2.0</Text>
-                            </View>
-                            <Text className="text-white font-bold text-xl mb-1">Besoin d'une nouvelle promo ?</Text>
-                            <Text className="text-white/80 text-sm mb-4">Laissez l'IA analyser votre stock et générer des offres.</Text>
-                            <TouchableOpacity
-                                className="bg-white py-3 px-6 rounded-xl self-start flex-row items-center shadow-lg"
-                                onPress={() => router.push("/promotions/oxy")}
-                            >
-                                <Text className="text-primary font-bold mr-2">Générer avec Eko</Text>
-                                <ArrowRight size={16} color="#7c3aed" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* KPI Cards */}
-                    <View className="flex-row gap-4 mb-8">
-                        <View className="flex-1 bg-white/5 border border-white/10 p-5 rounded-3xl backdrop-blur-md">
-                            <View className="bg-primary/20 p-2 rounded-xl self-start mb-3">
-                                <Users size={20} color="#a78bfa" />
-                            </View>
-                            <Text className="text-3xl font-bold text-white mb-1">{stats?.totalSubscribers || 0}</Text>
-                            <Text className="text-slate-400 text-xs uppercase tracking-wide">Abonnés</Text>
-                        </View>
-                        <View className="flex-1 bg-white/5 border border-white/10 p-5 rounded-3xl backdrop-blur-md">
-                            <View className="bg-secondary/20 p-2 rounded-xl self-start mb-3">
-                                <Tag size={20} color="#e879f9" />
-                            </View>
-                            <Text className="text-3xl font-bold text-white mb-1">{stats?.activePromotions || 0}</Text>
-                            <Text className="text-slate-400 text-xs uppercase tracking-wide">Promos Actives</Text>
-                        </View>
-                    </View>
-
-                    {/* Recent Activity */}
-                    <View className="mb-6">
-                        <View className="flex-row justify-between items-end mb-4">
-                            <Text className="text-white font-bold text-lg">Activités Récentes</Text>
-                            <TouchableOpacity onPress={loadData}>
-                                <Text className="text-accent text-sm font-semibold">Rafraîchir</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden min-h-[100px]">
-                            {loading ? (
-                                <View className="p-8 items-center"><Text className="text-slate-500">Chargement...</Text></View>
-                            ) : !stats?.recentActivity?.length ? (
-                                <View className="p-8 items-center"><Text className="text-slate-500">Aucune activité récente</Text></View>
-                            ) : (
-                                stats.recentActivity.map((log: any, i: number) => (
-                                    <View key={i} className={`p-4 flex-row items-center border-b border-white/5 ${i === stats.recentActivity.length - 1 ? 'border-b-0' : ''}`}>
-                                        <View className="w-10 h-10 rounded-full bg-slate-800 items-center justify-center mr-4 border border-white/5">
-                                            <Bell size={18} color="#94a3b8" />
-                                        </View>
-                                        <View className="flex-1">
-                                            <Text className="text-white font-semibold">{log.action}</Text>
-                                            <Text className="text-slate-500 text-xs">
-                                                {new Date(log.created_at).toLocaleDateString()}
-                                            </Text>
-                                        </View>
-                                        <Text className={`font-bold text-xs px-2 py-1 rounded ${log.severity === 'HIGH' ? 'bg-red-500/20 text-red-400' : 'bg-slate-700 text-slate-300'}`}>
-                                            {log.severity}
+                    <View className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                        {loading ? (
+                            <View className="p-8 items-center"><Text className="text-slate-500">Chargement...</Text></View>
+                        ) : !stats?.recentActivity?.length ? (
+                            <View className="p-8 items-center"><Text className="text-slate-500">Aucune activité récente</Text></View>
+                        ) : (
+                            stats.recentActivity.map((log: any, i: number) => (
+                                <View key={i} className={`p-4 flex-row items-start border-b border-slate-50 ${i === stats.recentActivity.length - 1 ? 'border-b-0' : ''}`}>
+                                    <View className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 shrink-0 ${log.action.includes('USER') ? 'bg-green-100' :
+                                            log.action.includes('COUPON') ? 'bg-orange-100' : 'bg-purple-100'
+                                        }`}>
+                                        {log.action.includes('USER') ? <User size={20} color="#16a34a" /> :
+                                            log.action.includes('COUPON') ? <Gift size={20} color="#ea580c" /> :
+                                                <Bell size={20} color="#8b5cf6" />}
+                                    </View>
+                                    <View className="flex-1">
+                                        <Text className="text-sm font-bold text-slate-900">{log.action}</Text>
+                                        <Text className="text-xs text-slate-500 mt-1" numberOfLines={1}>
+                                            {JSON.stringify(log.metadata)}
+                                        </Text>
+                                        <Text className="text-[10px] text-slate-400 mt-2">
+                                            {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </Text>
                                     </View>
-                                ))
-                            )}
-                        </View>
+                                </View>
+                            ))
+                        )}
                     </View>
+                </View>
 
-                </ScrollView>
-            </SafeAreaView>
+                {/* AI Insight Card */}
+                <View className="px-5 mb-24">
+                    <Text className="text-lg font-bold text-slate-900 mb-4">Suggestion IA du jour</Text>
+                    <View className="bg-slate-900 rounded-2xl p-5 relative overflow-hidden shadow-lg">
+                        <View className="absolute top-0 right-0 w-32 h-32 bg-purple-500 opacity-20 rounded-full blur-3xl -mr-10 -mt-10" />
 
-            {/* Floating Action Button */}
-            <TouchableOpacity
-                className="absolute bottom-6 right-6 bg-accent w-14 h-14 rounded-full items-center justify-center shadow-lg shadow-accent/30"
-                onPress={() => router.push("/promotions/create")}
-            >
-                <Plus size={28} color="#0f172a" strokeWidth={3} />
-            </TouchableOpacity>
+                        <View className="flex-row items-center gap-2 mb-3">
+                            <Sparkles size={16} color="#c084fc" />
+                            <Text className="text-xs font-bold uppercase tracking-wider text-slate-300">Ekonom-IA Insight</Text>
+                        </View>
+
+                        <Text className="text-slate-200 text-sm leading-6 mb-4">
+                            Les ventes chutent généralement le mardi. Lancez une "Offre Flash Mardi" pour vos {stats?.totalSubscribers || 0} abonnés pour booster le trafic.
+                        </Text>
+
+                        <TouchableOpacity
+                            className="bg-white py-3 rounded-xl items-center"
+                            onPress={() => router.push("/promotions/create")}
+                        >
+                            <Text className="text-slate-900 font-bold text-sm">Créer cette campagne</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+            </ScrollView>
+
+            <StatusBar style="dark" />
         </View>
     );
 }
