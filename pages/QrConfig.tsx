@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Bell, Tag, Clock, Palette, Layout, Save, RefreshCw, ShieldCheck, Scan, Ticket, CheckCircle } from 'lucide-react';
 import { useNavigate } from '../context/ThemeContext';
 import { api } from '../services/api';
+import EkoBot from '../components/EkoBot';
 
 const QrConfig: React.FC = () => {
   const navigate = useNavigate();
   const [qrColor, setQrColor] = useState('3B82F6'); // Default Blue
   const [selectedFrame, setSelectedFrame] = useState('gradient');
-  
+
   // Data State
   const [isLoading, setIsLoading] = useState(false);
   const [discountValue, setDiscountValue] = useState(10);
@@ -43,7 +44,7 @@ const QrConfig: React.FC = () => {
                 redeemed: configRes.data.coupons_redeemed || 0
               });
           }
-          
+
           const qrRes = await api.get('/api/welcome-offer/qr');
           if (qrRes.success && qrRes.token) {
               setSignedToken(qrRes.token);
@@ -102,9 +103,13 @@ const QrConfig: React.FC = () => {
         {/* Main Content - px-5 */}
         <main className="px-5 relative z-10 flex-1 overflow-y-auto no-scrollbar pb-24">
             <div className="mb-6 text-center">
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wide mb-4 border border-blue-200 dark:border-blue-500/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
-                    Boostez vos abonnés
+                {/* Badge with EkoBot */}
+                <div className="flex items-center justify-center gap-2 mb-4">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wide border border-blue-200 dark:border-blue-500/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
+                        Boostez vos abonnes
+                    </div>
+                    <EkoBot size="sm" mood="happy" bubbleText="QR securise !" />
                 </div>
                 <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 leading-tight">
                     Configurez votre <br/>
@@ -117,31 +122,31 @@ const QrConfig: React.FC = () => {
 
             {/* Performance Stats */}
             <div className="grid grid-cols-3 gap-3 mb-8">
-                <div className="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border border-white/10">
+                <div className="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border border-white/10 animate-slide-up" style={{ animationDelay: '0.05s' }}>
                     <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 mb-2">
                         <Scan size="16" />
                     </div>
                     <span className="text-lg font-bold text-gray-900 dark:text-white">{stats.scans}</span>
                     <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Scans</span>
                 </div>
-                <div className="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border border-white/10">
+                <div className="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border border-white/10 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                     <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-500 mb-2">
                         <Ticket size="16" />
                     </div>
                     <span className="text-lg font-bold text-gray-900 dark:text-white">{stats.generated}</span>
-                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Générés</span>
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Generes</span>
                 </div>
-                <div className="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border border-white/10">
+                <div className="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border border-white/10 animate-slide-up" style={{ animationDelay: '0.15s' }}>
                     <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 mb-2">
                         <CheckCircle size="16" />
                     </div>
                     <span className="text-lg font-bold text-gray-900 dark:text-white">{stats.redeemed}</span>
-                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Utilisés</span>
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Utilises</span>
                 </div>
             </div>
 
             {/* Config Form */}
-            <div className="glass-panel backdrop-blur-xl rounded-3xl p-6 mb-8 shadow-xl border border-white/50 dark:border-white/5 relative">
+            <div className="glass-panel backdrop-blur-xl rounded-3xl p-6 mb-8 shadow-xl border border-white/50 dark:border-white/5 relative animate-slide-up" style={{ animationDelay: '0.2s' }}>
                  {/* Security Badge */}
                  <div className="absolute -top-3 right-6 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
                     <ShieldCheck size="12" /> SECURED HMAC
@@ -150,17 +155,17 @@ const QrConfig: React.FC = () => {
                 <div className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Pourcentage de réduction
+                            Pourcentage de reduction
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Tag size="20" className="text-gray-400" />
                             </div>
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 value={discountValue}
                                 onChange={(e) => setDiscountValue(Number(e.target.value))}
-                                className="block w-full pl-10 pr-12 py-3 bg-white/50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 dark:text-white placeholder-gray-400 text-lg font-bold transition-colors" 
+                                className="block w-full pl-10 pr-12 py-3 bg-white/50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 dark:text-white placeholder-gray-400 text-lg font-bold transition-colors"
                             />
                             <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                 <span className="text-gray-500 dark:text-gray-400 font-bold">%</span>
@@ -170,13 +175,13 @@ const QrConfig: React.FC = () => {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Durée de validité
+                            Duree de validite
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Clock size="20" className="text-gray-400" />
                             </div>
-                            <select 
+                            <select
                                 value={duration}
                                 onChange={(e) => setDuration(e.target.value)}
                                 className="block w-full pl-10 pr-10 py-3 bg-white/50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 dark:text-white text-base font-medium transition-colors appearance-none cursor-pointer"
@@ -185,7 +190,7 @@ const QrConfig: React.FC = () => {
                                 <option value="48_hours">48 heures</option>
                                 <option value="1_week">1 semaine</option>
                                 <option value="30_days">30 jours</option>
-                                <option value="unlimited">Illimité</option>
+                                <option value="unlimited">Illimite</option>
                             </select>
                         </div>
                     </div>
@@ -224,8 +229,8 @@ const QrConfig: React.FC = () => {
                             ))}
                         </div>
                     </div>
-                    
-                    <button 
+
+                    <button
                         onClick={handleSave}
                         className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition flex items-center justify-center gap-2"
                     >
@@ -240,9 +245,9 @@ const QrConfig: React.FC = () => {
                 {selectedFrame === 'gradient' && (
                      <div className="relative p-0.5 rounded-[1.6rem] bg-gradient-to-br from-blue-500 to-purple-500 shadow-2xl shadow-purple-500/20 mb-6 transition-all duration-500 animate-fade-in">
                         <div className="bg-white p-4 rounded-[1.5rem]">
-                             <img 
+                             <img
                                 src={qrUrl}
-                                alt="QR Code" 
+                                alt="QR Code"
                                 className="w-48 h-48 rounded-lg mix-blend-multiply opacity-90"
                              />
                         </div>
@@ -250,9 +255,9 @@ const QrConfig: React.FC = () => {
                 )}
                 {selectedFrame === 'simple' && (
                      <div className="relative p-4 rounded-[1.6rem] bg-white border-4 border-gray-100 dark:border-white/10 shadow-lg mb-6 transition-all duration-500 animate-fade-in">
-                         <img 
+                         <img
                             src={qrUrl}
-                            alt="QR Code" 
+                            alt="QR Code"
                             className="w-48 h-48 rounded-lg"
                          />
                     </div>
@@ -260,9 +265,9 @@ const QrConfig: React.FC = () => {
                  {selectedFrame === 'glass' && (
                      <div className="relative p-6 rounded-[1.6rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl mb-6 transition-all duration-500 animate-fade-in">
                          <div className="bg-white/90 p-2 rounded-xl">
-                            <img 
+                            <img
                                 src={qrUrl}
-                                alt="QR Code" 
+                                alt="QR Code"
                                 className="w-44 h-44 rounded-lg mix-blend-multiply"
                             />
                          </div>

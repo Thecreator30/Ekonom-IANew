@@ -11,7 +11,16 @@ export async function GET(req: NextRequest) {
         const payload = verifyJwt(authHeader.split(' ')[1]);
         const stats = await MetricsService.getDashboardStats(payload.merchant_id);
 
-        return NextResponse.json(stats);
+        return NextResponse.json({
+            success: true,
+            data: {
+                revenue: stats.revenue,
+                revenueGrowth: stats.growth,
+                subscribers: stats.totalSubscribers,
+                newSubscribers: stats.newSubscribers,
+                activeCoupons: stats.activeCoupons,
+            }
+        });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 400 });
     }

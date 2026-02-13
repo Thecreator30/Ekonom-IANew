@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from '../context/ThemeContext';
 import { ArrowLeft, Share2, Download, Copy, Calendar, BarChart, ExternalLink, ShieldCheck, Loader2 } from 'lucide-react';
 import { api } from '../services/api';
+import EkoBot from '../components/EkoBot';
 
 const PromotionDetails: React.FC = () => {
     const { id } = useParams();
@@ -9,6 +10,7 @@ const PromotionDetails: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [promo, setPromo] = useState<any>(null);
     const [qrToken, setQrToken] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,9 +101,12 @@ const PromotionDetails: React.FC = () => {
                         </div>
                     </div>
                     
-                    <p className="mt-4 text-xs text-gray-400 text-center max-w-[200px]">
-                        Ce QR Code est unique à cette promotion et sécurisé par signature cryptographique.
-                    </p>
+                    <div className="mt-4 flex items-center gap-2">
+                        <EkoBot size="sm" mood="happy" />
+                        <p className="text-xs text-gray-400 text-center max-w-[200px]">
+                            Ce QR est securise et unique !
+                        </p>
+                    </div>
                 </div>
 
                 {/* Link Box */}
@@ -113,18 +118,27 @@ const PromotionDetails: React.FC = () => {
                         <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Lien Direct</p>
                         <p className="text-xs text-gray-900 dark:text-white truncate font-mono">{targetUrl}</p>
                     </div>
-                    <button className="text-primary hover:bg-white/10 p-2 rounded-lg transition">
-                        <Copy size="16" />
+                    <button
+                        onClick={() => { navigator.clipboard.writeText(targetUrl); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+                        className="text-primary hover:bg-white/10 p-2 rounded-lg transition"
+                    >
+                        {copied ? <ShieldCheck size="16" className="text-green-500" /> : <Copy size="16" />}
                     </button>
                 </div>
 
                 {/* Actions */}
                 <div className="grid grid-cols-2 gap-4">
-                    <button className="flex items-center justify-center py-3.5 glass-panel border border-gray-200 dark:border-white/10 rounded-xl text-sm font-bold text-gray-700 dark:text-white shadow-sm hover:bg-white/40 dark:hover:bg-white/5 transition">
+                    <button
+                        onClick={() => { if (navigator.share) { navigator.share({ title: promo.title, text: promo.description, url: targetUrl }); } else { navigator.clipboard.writeText(targetUrl); } }}
+                        className="flex items-center justify-center py-3.5 glass-panel border border-gray-200 dark:border-white/10 rounded-xl text-sm font-bold text-gray-700 dark:text-white shadow-sm hover:bg-white/40 dark:hover:bg-white/5 transition active:scale-95"
+                    >
                         <Share2 size="18" className="mr-2" />
                         Partager
                     </button>
-                    <button className="flex items-center justify-center py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition">
+                    <button
+                        onClick={() => { const link = document.createElement('a'); link.href = qrImageUrl; link.download = `promo-${id}-qr.svg`; link.click(); }}
+                        className="flex items-center justify-center py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition active:scale-95"
+                    >
                         <Download size="18" className="mr-2" />
                         Sauvegarder
                     </button>

@@ -1,26 +1,21 @@
+import { GoogleGenAI } from "@google/genai";
 import { env } from '../config/env';
 
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY || '' });
+
 export class AiService {
-    private static async callOpenAI(messages: { role: string; content: string }[]) {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o-mini',
-                messages,
-                response_format: { type: 'json_object' },
-            }),
+    private static async callGemini(prompt: string): Promise<any> {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.0-flash',
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+            }
         });
 
-        if (!response.ok) {
-            throw new Error(`OpenAI API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return JSON.parse(data.choices[0].message.content);
+        const text = response.text;
+        if (!text) throw new Error('No response from Gemini');
+        return JSON.parse(text);
     }
 
     static async generatePromotionContent(context: {
@@ -28,12 +23,11 @@ export class AiService {
         metrics: any;
         goal: string;
     }) {
-        const systemPrompt = `Tu es Eko, un assistant IA expert en marketing pour les petits commerçants.
+        const prompt = `Tu es Eko, un assistant IA expert en marketing pour les petits commerçants.
 Ton style est : Energique, Professionnel mais accessible, et orienté résultats.
 Règles strictes : Pas de promesses financières, pas de claims médicaux.
-Réponds uniquement en JSON valide.`;
 
-        const userPrompt = `Business : ${context.businessType}
+Business : ${context.businessType}
 Objectif : ${context.goal}
 Données actuelles : ${JSON.stringify(context.metrics)}
 
@@ -43,13 +37,10 @@ Génère 3 suggestions de promotions. Pour chaque suggestion :
 3. La valeur de la réduction suggérée (ex: -20%)
 4. Une justification basée sur les données
 
-Format JSON : { "suggestions": [{ "title": "...", "description": "...", "discount": "...", "reasoning": "..." }] }`;
+Réponds en JSON : { "suggestions": [{ "title": "...", "description": "...", "discount": "...", "reasoning": "..." }] }`;
 
         try {
-            return await this.callOpenAI([
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userPrompt },
-            ]);
+            return await this.callGemini(prompt);
         } catch (error) {
             console.error('AI Generation Error:', error);
             return {
@@ -67,14 +58,12 @@ Format JSON : { "suggestions": [{ "title": "...", "description": "...", "discoun
         const systemPrompt = `Tu es Eko, un assistant marketing IA pour les commerçants.
 Tu aides à créer des promotions, rédiger des messages marketing, et donner des conseils.
 Sois concis, professionnel et orienté action.
-Si on te demande de générer du contenu promotionnel, réponds en JSON : { "content": "..." }
-Sinon, réponds en JSON : { "content": "ta réponse ici" }`;
+Réponds en JSON : { "content": "ta réponse ici" }
+
+Demande de l'utilisateur : ${prompt}`;
 
         try {
-            return await this.callOpenAI([
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: prompt },
-            ]);
+            return await this.callGemini(systemPrompt);
         } catch (error) {
             console.error('AI Chat Error:', error);
             return { content: "Désolé, je suis temporairement indisponible. Réessayez dans un instant." };

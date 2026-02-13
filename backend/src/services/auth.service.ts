@@ -2,7 +2,11 @@ import { prisma } from '../infrastructure/db';
 import { hashPassword, verifyPassword } from '../utils/hash';
 import { signAccessToken, verifyToken as verifyJwt } from '../utils/token';
 import { User } from '../domain/auth';
-import { randomBytes } from 'crypto';
+import { randomBytes, createHash } from 'crypto';
+
+/** SHA-256 hash for refresh tokens before DB storage */
+const hashRefreshToken = (token: string): string =>
+    createHash('sha256').update(token).digest('hex');
 
 export class AuthService {
     static async verifyToken(token: string) {
@@ -58,13 +62,23 @@ export class AuthService {
 
         await prisma.refreshToken.create({
             data: {
-                token_hash: refreshTokenString, // In prod, hash this too!
+                token_hash: hashRefreshToken(refreshTokenString),
                 merchant_id: merchant.id,
                 expires_at: expiresAt,
                 revoked: false
             }
         });
 
-        return { user, accessToken, refreshToken: refreshTokenString };
+        return {
+            user,
+            accessToken,
+            refreshToken: refreshTokenString,
+            merchant: {
+                id: merchant.id,
+                email: merchant.email,
+                company_name: merchant.company_name,
+                subscription_plan: merchant.subscription_plan,
+            }
+        };
     }
 }

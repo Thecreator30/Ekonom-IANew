@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { JWTPayload } from '../domain/auth';
+import { env } from '../config/env';
 
-const SECRET = process.env.JWT_SECRET || 'dev-secret';
+const SECRET = env.JWT_SECRET;
 
 export const signAccessToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): string => {
     return jwt.sign(payload, SECRET, { expiresIn: '15m' });

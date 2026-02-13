@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation, Link } from '../context/ThemeContext';
-import { Home, Wallet, User, ScanLine } from 'lucide-react';
+import { Home, Wallet } from 'lucide-react';
+import EkoBot from './EkoBot';
 
 const ClientLayout: React.FC = () => {
   const location = useLocation();
@@ -8,39 +9,48 @@ const ClientLayout: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent relative">
-      {/* Client Specific Background Accents - Optional, can remove if you want pure global BG */}
-      {/* Kept subtle to differentiate client mode but allows global BG to bleed through */}
+      {/* Client Specific Background Accents */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-40 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-[80px] mix-blend-screen"></div>
         <div className="absolute bottom-40 -left-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] mix-blend-screen"></div>
       </div>
 
       {/* Main Content Area - Scrollable */}
-      <div className="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-24">
+      <div className="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-28">
         <Outlet />
       </div>
 
-      {/* Bottom Navigation for Client */}
-      <nav className="absolute bottom-0 left-0 right-0 z-50 glass-dock backdrop-blur-lg border-t border-gray-200 dark:border-white/5 pb-safe pt-2 px-6">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/client/home" className={`flex flex-col items-center justify-center w-12 transition-all duration-300 ${isActive('/client/home') ? 'text-teal-600 dark:text-teal-400 scale-110' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}>
-            <Home size={24} strokeWidth={isActive('/client/home') ? 2.5 : 2} />
-            <span className="text-[10px] font-medium mt-1">Explorer</span>
-          </Link>
-          
-          {/* Scan Center Button */}
-          <button className="relative -top-6 group">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 text-white shadow-xl shadow-teal-500/40 flex items-center justify-center transform transition-all group-active:scale-95 border-[6px] border-white dark:border-[#050505]">
-               <ScanLine size={28} className="stroke-[2.5]" />
-            </div>
-          </button>
+      {/* Bottom Navigation with Eko Center */}
+      <div className="absolute bottom-6 left-4 right-4 z-50 animate-slide-up">
+        <nav className="glass-dock rounded-2xl px-2 py-3 flex justify-between items-center relative transition-all duration-300">
 
-          <Link to="/client/wallet" className={`flex flex-col items-center justify-center w-12 transition-all duration-300 ${isActive('/client/wallet') ? 'text-teal-600 dark:text-teal-400 scale-110' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}>
-            <Wallet size={24} strokeWidth={isActive('/client/wallet') ? 2.5 : 2} />
-            <span className="text-[10px] font-medium mt-1">Wallet</span>
+          <Link to="/client/home" className="relative group w-14 h-12 flex items-center justify-center">
+            <div className={`absolute inset-0 bg-black/5 dark:bg-white/5 rounded-xl transition-all duration-300 ${isActive('/client/home') ? 'opacity-100 scale-100' : 'opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-90'}`}></div>
+            <Home size={22} className={`relative z-10 transition-colors duration-300 ${isActive('/client/home') ? 'text-black dark:text-white' : 'text-gray-400 dark:text-gray-500'}`} strokeWidth={isActive('/client/home') ? 2.5 : 2} />
+            {isActive('/client/home') && <div className="absolute -bottom-1 w-1 h-1 bg-black dark:bg-white rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] dark:shadow-[0_0_8px_white]"></div>}
           </Link>
-        </div>
-      </nav>
+
+          {/* Eko Center Button - mirrors merchant Layout */}
+          <Link to="/assistant" className="relative -top-8 group flex flex-col items-center justify-center z-30 outline-none" aria-label="Ouvrir l'Assistant Eko">
+            {/* Glow effect behind the character */}
+            <div className="absolute top-2 w-16 h-16 bg-teal-500/40 rounded-full blur-xl opacity-60 group-hover:opacity-100 transition duration-500 animate-pulse-slow pointer-events-none"></div>
+
+            {/* The Bot itself acting as the button */}
+            <div className="relative z-10 transform transition-all duration-300 group-active:scale-95 group-hover:-translate-y-2">
+               <EkoBot size="md" mood="happy" className="scale-125 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] filter contrast-125" />
+            </div>
+
+            <span className="absolute -bottom-8 text-[10px] font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">EKO</span>
+          </Link>
+
+          <Link to="/client/wallet" className="relative group w-14 h-12 flex items-center justify-center">
+            <div className={`absolute inset-0 bg-black/5 dark:bg-white/5 rounded-xl transition-all duration-300 ${isActive('/client/wallet') ? 'opacity-100 scale-100' : 'opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-90'}`}></div>
+            <Wallet size={22} className={`relative z-10 transition-colors duration-300 ${isActive('/client/wallet') ? 'text-black dark:text-white' : 'text-gray-400 dark:text-gray-500'}`} strokeWidth={isActive('/client/wallet') ? 2.5 : 2} />
+            {isActive('/client/wallet') && <div className="absolute -bottom-1 w-1 h-1 bg-black dark:bg-white rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] dark:shadow-[0_0_8px_white]"></div>}
+          </Link>
+
+        </nav>
+      </div>
     </div>
   );
 };
