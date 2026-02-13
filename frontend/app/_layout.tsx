@@ -15,7 +15,7 @@ export default function Layout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="promotions/create" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="promotions/oxy" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="promotions/eko" options={{ presentation: 'modal', headerShown: false }} />
           </Stack>
         </View>
       </SafeAreaProvider>

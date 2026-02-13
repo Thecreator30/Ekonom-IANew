@@ -44,8 +44,10 @@ export const api = {
         create: async (data: any) => {
             const response = await client.post('/promotions', data);
             return response.data;
-        },
-        generateWithOxy: async (prompt: string) => {
+        }
+    },
+    ai: {
+        generateWithEko: async (prompt: string) => {
             // Mock response for now (Backend AI service coming in Phase 2)
             return new Promise((resolve) => {
                 setTimeout(() => {

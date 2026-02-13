@@ -66,7 +66,7 @@ export default function CreatePromotionScreen() {
                     <ScrollView className="flex-1 p-6">
                         {/* AI Banner */}
                         <TouchableOpacity
-                            onPress={() => router.push("/promotions/oxy")}
+                            onPress={() => router.push("/promotions/eko")}
                             className="bg-purple-50 p-4 rounded-2xl border border-purple-100 flex-row items-center mb-8"
                         >
                             <View className="bg-purple-100 w-10 h-10 rounded-full items-center justify-center mr-3">
@@ -74,7 +74,7 @@ export default function CreatePromotionScreen() {
                             </View>
                             <View className="flex-1">
                                 <Text className="font-bold text-purple-900">Need inspiration?</Text>
-                                <Text className="text-purple-600 text-xs">Let Oxy write the perfect offer for you.</Text>
+                                <Text className="text-purple-600 text-xs">Let Eko write the perfect offer for you.</Text>
                             </View>
                             <ArrowRight size={20} color="#7c3aed" />
                         </TouchableOpacity>

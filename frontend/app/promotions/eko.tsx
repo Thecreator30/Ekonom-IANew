@@ -4,7 +4,7 @@ import { X, Sparkles, Copy, RefreshCw } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
-export default function OxyScreen() {
+export default function EkoScreen() {
     const router = useRouter();
     const [prompt, setPrompt] = useState("");
     const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function OxyScreen() {
             <View className="px-6 py-4 flex-row justify-between items-center bg-white">
                 <View className="flex-row items-center gap-2">
                     <Sparkles size={24} color="#7c3aed" />
-                    <Text className="text-xl font-bold text-slate-900">Oxy Assistant</Text>
+                    <Text className="text-xl font-bold text-slate-900">Eko Assistant</Text>
                 </View>
                 <TouchableOpacity onPress={() => router.back()} className="bg-slate-50 p-2 rounded-full">
                     <X size={24} color="#334155" />
