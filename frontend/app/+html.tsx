@@ -18,7 +18,7 @@ export default function Root({ children }: PropsWithChildren) {
 
                 {/* Permissive CSP for development to allow 'eval' (required by Metro/Webpack HMR) */}
                 {/* Permissive CSP for development to allow 'eval' (required by Metro/Webpack HMR) */}
-                <meta httpEquiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; style-src * 'unsafe-inline';" />
+                <meta httpEquiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src-elem * 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline'; worker-src * 'unsafe-inline' 'unsafe-eval' data: blob:; font-src * data: blob: 'unsafe-inline';" />
 
                 <ScrollViewStyleReset />
             </head>
