@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { clearTokens } from "../../services/storage";
+import { EkoBot } from "../../components/EkoBot";
 
 export default function DashboardScreen() {
     const router = useRouter();
@@ -166,7 +167,7 @@ export default function DashboardScreen() {
                             stats.recentActivity.map((log: any, i: number) => (
                                 <View key={i} className={`p-4 flex-row items-start border-b border-slate-50 ${i === stats.recentActivity.length - 1 ? 'border-b-0' : ''}`}>
                                     <View className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 shrink-0 ${log.action.includes('USER') ? 'bg-green-100' :
-                                            log.action.includes('COUPON') ? 'bg-orange-100' : 'bg-purple-100'
+                                        log.action.includes('COUPON') ? 'bg-orange-100' : 'bg-purple-100'
                                         }`}>
                                         {log.action.includes('USER') ? <User size={20} color="#16a34a" /> :
                                             log.action.includes('COUPON') ? <Gift size={20} color="#ea580c" /> :
