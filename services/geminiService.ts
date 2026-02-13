@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.API_KEY || ''; // Ensure this is set in your environment
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 export interface PromotionContent {

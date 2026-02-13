@@ -30,6 +30,7 @@ module.exports = {
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'scan': 'scan 2s linear infinite',
         'float': 'float 6s ease-in-out infinite',
+        'reflection': 'reflection 10s linear infinite',
       },
       keyframes: {
         blob: {
@@ -58,6 +59,10 @@ module.exports = {
           '0%': { top: '0%' },
           '50%': { top: '100%' },
           '100%': { top: '0%' },
+        },
+        reflection: {
+          '0%': { transform: 'translateX(-100%) skewX(-12deg)' },
+          '100%': { transform: 'translateX(200%) skewX(-12deg)' },
         }
       },
       boxShadow: {
