@@ -59,5 +59,11 @@ export const api = {
             const response = await client.get('/welcome-offer');
             return response.data;
         }
+    },
+    push: {
+        send: async (title: string, body: string, segment: string = 'ALL') => {
+            const response = await client.post('/push/send', { title, body, segment });
+            return response.data;
+        }
     }
 };

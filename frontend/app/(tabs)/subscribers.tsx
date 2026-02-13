@@ -1,8 +1,10 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { UserCheck } from "lucide-react-native";
+import { UserCheck, Send } from "lucide-react-native";
+import { useRouter } from "expo-router";
 
 export default function SubscribersScreen() {
+    const router = useRouter();
     const subscribers = Array.from({ length: 10 }).map((_, i) => ({
         id: i.toString(),
         name: `User ${i + 1}`,
@@ -11,9 +13,17 @@ export default function SubscribersScreen() {
 
     return (
         <SafeAreaView className="flex-1 bg-slate-50">
-            <View className="px-6 py-4 bg-white border-b border-slate-100">
-                <Text className="text-2xl font-extrabold text-slate-900">Subscribers</Text>
-                <Text className="text-slate-500">1,240 total active users</Text>
+            <View className="px-6 py-4 bg-white border-b border-slate-100 flex-row justify-between items-center">
+                <View>
+                    <Text className="text-2xl font-extrabold text-slate-900">Subscribers</Text>
+                    <Text className="text-slate-500">1,240 total active users</Text>
+                </View>
+                <TouchableOpacity
+                    onPress={() => router.push("/notifications/send")}
+                    className="bg-blue-50 p-3 rounded-full border border-blue-100"
+                >
+                    <Send size={20} color="#2563eb" />
+                </TouchableOpacity>
             </View>
 
             <FlatList
