@@ -67,5 +67,29 @@ export const api = {
             const response = await client.post('/push/send', { title, body, segment });
             return response.data;
         }
+    },
+    subscribers: {
+        list: async () => {
+            const response = await client.get('/subscribers');
+            return response.data;
+        },
+        sync: async (data: any) => {
+            const response = await client.post('/subscribers', data);
+            return response.data;
+        }
+    },
+    coupons: {
+        issue: async (subscriberId: string, discountValue: string) => {
+            const response = await client.post('/coupons/issue', { subscriberId, discountValue });
+            return response.data;
+        },
+        validate: async (code: string) => {
+            const response = await client.post('/coupons/validate', { code });
+            return response.data;
+        },
+        redeem: async (code: string) => {
+            const response = await client.post('/coupons/redeem', { code });
+            return response.data;
+        }
     }
 };

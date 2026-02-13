@@ -10,3 +10,5 @@ export const signAccessToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): strin
 export const verifyToken = (token: string): JWTPayload => {
     return jwt.verify(token, SECRET) as JWTPayload;
 };
+
+export const verifyJwt = verifyToken;
